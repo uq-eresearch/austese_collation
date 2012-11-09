@@ -1,0 +1,9 @@
+name = AustESE Collation Tools
+description = Collation Tools based on HRITServer
+package = AustESE
+core = 7.x
+version = "7.x-1.x-dev"
+core = "7.x"
+project = "austese"
+
+

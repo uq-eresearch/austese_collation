@@ -1,0 +1,67 @@
+.configureIcon {
+     background-image:url(cog_16x16.png);
+}
+
+/* override bootstrap CSS for Ext form elements */
+#tableappwindow .x-form-checkbox {
+    width:13px;
+}
+.x-form-item-body label {
+    display: inline;
+}
+.x-box-inner .x-tool img {
+    height: 18px;
+}
+#tableappwindow input[type="text"], #tableappui input[type="text"] {
+    margin-bottom:0px;
+}
+#tableappui input[readonly] {
+    cursor:default;
+}
+/* don't wrap table entries so that apparatus remains aligned */
+#tableappui td {
+    white-space:nowrap;
+}
+
+/* Formatting for text and table view contents */
+#tableappui h1 {font-size:130%;}
+#tableappui h2 {font-size: 120%;}
+#tableappui h3 {font-size: 110%;}
+.siglum {
+    color: #51666b;
+    font-style:italic;
+    padding-right:10px;
+}
+p.stage-italic { 
+    color: #51666b;
+    font-style: italic;
+    margin-top:1em;
+    margin-bottom:1em;
+}
+p.stage { 
+    color: #51666b;
+    margin-top:1em;
+    margin-bottom:1em;
+}
+span.speaker {
+    font-weight: bold
+}
+br.l {}
+p.sp {
+    line-height:2em;
+}
+span.italics {
+    font-style: italic
+}
+span.bold {
+    font-weight: bold;
+}
+span.deleted {
+    color: red
+}
+span.added, span.inserted {
+    color: blue
+}
+span.merged { -hrit-mergeid: id }
+a.parent { color: #eeeeee; -hrit-childid: href }
+a.child { color: #eeeeee; -hrit-parentid: href }
