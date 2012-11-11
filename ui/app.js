@@ -2,12 +2,12 @@
 Ext.Loader.setConfig({
     enabled: true
 });
-var moduleName = 'austese_collation';
-Ext.Loader.setPath('TableApparatusApp.store', '/sites/all/modules/' + moduleName + '/ui/app/store');
-Ext.Loader.setPath('TableApparatusApp.model', '/sites/all/modules/' + moduleName + '/ui/app/model');
-Ext.Loader.setPath('TableApparatusApp.reader', '/sites/all/modules/' + moduleName + '/ui/app/reader');
-Ext.Loader.setPath('TableApparatusApp.controller', '/sites/all/modules/' + moduleName + '/ui/app/controller');
-Ext.Loader.setPath('TableApparatusApp.view', '/sites/all/modules/' + moduleName + '/ui/app/view');
+var modulePath = '/sites/all/modules/austese_collation';
+Ext.Loader.setPath('TableApparatusApp.store',  modulePath + '/ui/app/store');
+Ext.Loader.setPath('TableApparatusApp.model',  modulePath + '/ui/app/model');
+Ext.Loader.setPath('TableApparatusApp.reader',  modulePath + '/ui/app/reader');
+Ext.Loader.setPath('TableApparatusApp.controller', modulePath + '/ui/app/controller');
+Ext.Loader.setPath('TableApparatusApp.view',  modulePath + '/ui/app/view');
 Ext.Loader.setPath('Ext.ux', '/ext-4.1.1a/examples/ux');
 
 Ext.application({
