@@ -1,7 +1,12 @@
 .configureIcon {
      background-image:url(cog_16x16.png);
 }
-
+.fullscreenIcon {
+    background-image:url(fullscreen_16x16.png);
+}
+.exitFullscreenIcon {
+    background-image:url(fullscreen_exit_16x16.png);
+}
 /* override bootstrap CSS for Ext form elements */
 #tableappwindow .x-form-checkbox {
     width:13px;
@@ -12,21 +17,21 @@
 .x-box-inner .x-tool img {
     height: 18px;
 }
-#tableappwindow input[type="text"], #tableappui input[type="text"] {
+#tableappwindow input[type="text"], .tableapp input[type="text"] {
     margin-bottom:0px;
 }
-#tableappui input[readonly] {
+.tableapp input[readonly] {
     cursor:default;
 }
 /* don't wrap table entries so that apparatus remains aligned */
-#tableappui td {
+.tableapp td {
     white-space:nowrap;
 }
 
 /* Formatting for text and table view contents */
-#tableappui h1 {font-size:130%;}
-#tableappui h2 {font-size: 120%;}
-#tableappui h3 {font-size: 110%;}
+.tableapp h1 {font-size:130%;}
+.tableapp h2 {font-size: 120%;}
+.tableapp h3 {font-size: 110%;}
 .siglum {
     color: #51666b;
     font-style:italic;

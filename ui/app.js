@@ -31,9 +31,10 @@ Ext.application({
         'TableApparatusAppController'
     ],
     launch: function(){
-        Ext.create('TableApparatusApp.view.ApparatusViewer', {
-            renderTo: 'tableappui'
-        });
+        var placeholder = Ext.get('tableuiplaceholder');
+        Ext.create('TableApparatusApp.view.ApparatusViewer',{
+            renderTo: Ext.getBody(),
+        }).showAt(placeholder.getX(),placeholder.getY());
         // render config window
         Ext.create('TableApparatusApp.view.OptionsWindow').show().hide();
     }

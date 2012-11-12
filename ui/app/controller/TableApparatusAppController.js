@@ -12,6 +12,14 @@ Ext.define('TableApparatusApp.controller.TableApparatusAppController', {
     cancelConfigureOptions: function(button, e, options) {
         button.up('window').hide();
     },
+    toggleFullscreen: function(button, e, options){
+        button.up('window').toggleMaximize();
+        if (button.iconCls=='exitFullscreenIcon') {
+            button.setIconCls('fullscreenIcon');
+        } else {
+            button.setIconCls('exitFullscreenIcon');
+        }
+    },
     /* 
      * Reads config options from form and grid in the options window
      */
@@ -230,10 +238,27 @@ Ext.define('TableApparatusApp.controller.TableApparatusAppController', {
         //console.log("from " + currentScroll + " scrolled " + (fromVersionView? "tableview":"versionview") + " " + otherScroll + " " + percent);
         
     },
+    resizeUI: function(w, h){
+        console.log("resizeUI")
+        // force resize and repositioning of app when window resizes
+        var uiPanel = Ext.ComponentQuery.query("apparatusviewer")[0];
+        var placeholder = Ext.get('tableuiplaceholder');
+        var newHeight = h - (placeholder.getY());
+        var newWidth = w - placeholder.getX()*2;
+        placeholder.setHeight(newHeight);
+        uiPanel.setHeight(newHeight);
+        placeholder.setWidth(newWidth);
+        uiPanel.setWidth(newWidth);
+        uiPanel.showAt(placeholder.getX(), placeholder.getY());
+    },
     init: function(application) {
+        Ext.EventManager.onWindowResize(this.resizeUI, this);
         this.control({
             "#configureButton": {
                 click: this.showConfigureOptions
+            },
+            "#toggleFullscreenButton": {
+                click: this.toggleFullscreen
             },
             "#cancelButton": {
                 click: this.cancelConfigureOptions
@@ -248,7 +273,16 @@ Ext.define('TableApparatusApp.controller.TableApparatusAppController', {
                 change: this.onDocumentIdChange
             },
             "#versionView": {
-                scroll: function(){this.syncScroll(true)}
+                scroll: function(){this.syncScroll(true)},
+               
+            },
+            "apparatusviewer": {
+                restore: function(){
+                    this.resizeUI(Ext.Element.getViewportWidth(),Ext.Element.getViewportHeight());
+                },
+                afterrender: function(){
+                    this.resizeUI(Ext.Element.getViewportWidth(),Ext.Element.getViewportHeight());
+                }
             }
             /*,"#tableView": {
                 scroll: this.syncScroll

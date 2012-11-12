@@ -1,5 +1,10 @@
 Ext.define('TableApparatusApp.view.ApparatusViewer', {
-    extend: 'Ext.panel.Panel',
+    extend: 'Ext.window.Window',
+    closable: false,
+    height: 500,
+    header:false,
+    width: 600,
+    layout: 'fit',
     layout: {
         type: 'border'
     },
@@ -7,12 +12,12 @@ Ext.define('TableApparatusApp.view.ApparatusViewer', {
         'TableApparatusApp.view.TableView',
         'TableApparatusApp.view.VersionView'
     ],
+    alias: 'widget.apparatusviewer',
     initComponent: function() {
         var me = this;
-
+        
         Ext.applyIf(me, {
-            height: 600,
-            autoWidth: true,
+            cls: 'tableapp',
             dockedItems: [
                 {
                     xtype: 'toolbar',
@@ -51,6 +56,11 @@ Ext.define('TableApparatusApp.view.ApparatusViewer', {
                             valueField: 'version',
                             grow: true,
                             labelWidth: 70
+                        },
+                        {
+                            xtype: 'button',
+                            iconCls: 'fullscreenIcon',
+                            itemId: 'toggleFullscreenButton'
                         }
                     ]
                 }
