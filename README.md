@@ -8,3 +8,5 @@ How to use this module:
 * Enable module via drupal admin console
 
 License: GPL 3.0
+
+This module was developed as part of the [AustESE project](http://itee.uq.edu.au/~eresearch/projects/austese).
