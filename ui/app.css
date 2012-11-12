@@ -26,16 +26,36 @@
 /* don't wrap table entries so that apparatus remains aligned */
 .tableapp td {
     white-space:nowrap;
+    padding:0;
+    border:0;
 }
-
+.tableapp tr {
+    border:0;
+}
+.tableapp table {
+    border:0;
+    border-spacing: 0px 2px;
+}
+.tableapp table.inline:hover {cursor:pointer}
+.tableapp table.inline { display: inline-table; position: relative; }
 /* Formatting for text and table view contents */
 .tableapp h1 {font-size:130%;}
 .tableapp h2 {font-size: 120%;}
 .tableapp h3 {font-size: 110%;}
-.siglum {
+.tableapp td.siglum {
     color: #51666b;
     font-style:italic;
     padding-right:10px;
+    padding-left: 3px;
+}
+.tableapp td.siglumhidden {
+    display: none;
+}
+.tablapp tr.shown {
+    display: table-row;
+}
+.tableapp tr.hidden {
+    display: none;
 }
 p.stage-italic { 
     color: #51666b;
@@ -65,8 +85,31 @@ span.deleted {
     color: red
 }
 span.added, span.inserted {
+    color: blue;
+    position: relative;
+}
+span.base { 
+    border-bottom: 1px dotted #ba0000;
+}
+span.left {
+    position: relative;
+    float:left;
+}
+span.right {
+    position: relative;
+    float:right;
+}
+span.inserted-left {
+    position: relative;
+    float: left;
+    color: blue
+}
+span.inserted-right {
+    position: relative;
+    float: right;
     color: blue
 }
 span.merged { -hrit-mergeid: id }
 a.parent { color: #eeeeee; -hrit-childid: href }
 a.child { color: #eeeeee; -hrit-parentid: href }
+
