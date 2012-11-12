@@ -9,7 +9,8 @@ Ext.Loader.setPath('TableApparatusApp.reader',  modulePath + '/ui/app/reader');
 Ext.Loader.setPath('TableApparatusApp.controller', modulePath + '/ui/app/controller');
 Ext.Loader.setPath('TableApparatusApp.view',  modulePath + '/ui/app/view');
 Ext.Loader.setPath('Ext.ux', '/ext-4.1.1a/examples/ux');
-
+// keep z-index seed low to avoid interfering with drupal admin overlay
+Ext.WindowMgr.zseed = 1040;
 Ext.application({
     models: [
         'VersionListModel',
@@ -32,9 +33,10 @@ Ext.application({
     ],
     launch: function(){
         var placeholder = Ext.get('tableuiplaceholder');
-        Ext.create('TableApparatusApp.view.ApparatusViewer',{
+        var mainWindow = Ext.create('TableApparatusApp.view.ApparatusViewer',{
             renderTo: Ext.getBody(),
         }).showAt(placeholder.getX(),placeholder.getY());
+        
         // render config window
         Ext.create('TableApparatusApp.view.OptionsWindow').show().hide();
     }
