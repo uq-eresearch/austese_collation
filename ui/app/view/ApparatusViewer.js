@@ -3,8 +3,9 @@ Ext.define('TableApparatusApp.view.ApparatusViewer', {
     closable: false,
     height: 500,
     header:false,
+    border: false,
+    resizeHandles: '',
     width: 600,
-    layout: 'fit',
     layout: {
         type: 'border'
     },

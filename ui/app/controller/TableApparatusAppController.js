@@ -18,6 +18,10 @@ Ext.define('TableApparatusApp.controller.TableApparatusAppController', {
             button.setIconCls('fullscreenIcon');
         } else {
             button.setIconCls('exitFullscreenIcon');
+            // set height of placeholder to 0 to prevent overflow in browser window
+            var placeholder = Ext.get('tableuiplaceholder');
+            placeholder.setHeight(0);
+            Ext.getBody().scrollTo('top',0);
         }
     },
     /* 
@@ -239,7 +243,7 @@ Ext.define('TableApparatusApp.controller.TableApparatusAppController', {
         
     },
     resizeUI: function(w, h){
-        console.log("resizeUI")
+        //console.log("resizeUI")
         // force resize and repositioning of app when window resizes
         var uiPanel = Ext.ComponentQuery.query("apparatusviewer")[0];
         var placeholder = Ext.get('tableuiplaceholder');
