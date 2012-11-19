@@ -180,7 +180,7 @@ Ext.define('TableApparatusApp.controller.TableApparatusAppController', {
                 prevVisible = e;
             });
             if (firstVisible) {
-                this.highlightFirst.delay(200, null, null, [{elem: firstVisible}]);
+                //this.highlightFirst.delay(200, null, null, [{elem: firstVisible}]);
                 var theid = firstVisible.getAttribute('id');
                 if(theid) {
                     if (!theid.match("ext")) {
@@ -254,7 +254,7 @@ Ext.define('TableApparatusApp.controller.TableApparatusAppController', {
                     tableFirstVisible.scrollIntoView(tableViewBody);
                     //console.log(currentScrollAdjusted + " offset of first visible",firstVisible.getOffsetsTo(versionViewBody), firstVisible.dom.textContent || firstVisible.dom.innerText);
                     //tableFirstVisible.highlight("ffff9c", { attr: 'backgroundColor', duration: 1000 });
-                    this.highlightTableFirst.delay(200, null, null,[{elem: tableFirstVisible}]);
+                    //this.highlightTableFirst.delay(200, null, null,[{elem: tableFirstVisible}]);
                     //firstVisible.frame("#ff0000", 1, { duration: 1000 });
                 }
             }
