@@ -67,7 +67,7 @@ Ext.define('TableApparatusApp.controller.TableApparatusAppController', {
         // update the list of versions when the document id changes (this will trigger version view to update)
         var versionListStore = Ext.getStore("VersionListStore");
         // TODO: update to /json/list when id is included in json
-        versionListStore.getProxy().url = '/list/' + newVal;
+        versionListStore.getProxy().url = '/json/list/' + newVal;
         
         // after version list has loaded, reset the table view version selection options
         versionListStore.load({scope: this, callback:function(){

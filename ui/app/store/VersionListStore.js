@@ -6,7 +6,7 @@ Ext.define('TableApparatusApp.store.VersionListStore', {
         'TableApparatusApp.reader.VersionListReader'
     ],
 
-    constructor: function(cfg) {
+    /*constructor: function(cfg) {
         var me = this;
         cfg = cfg || {};
         me.callParent([Ext.apply({
@@ -20,9 +20,9 @@ Ext.define('TableApparatusApp.store.VersionListStore', {
                 }
             }
         }, cfg)]);
-    }
+    }*/
     
-   /* using the JSON data
+   // using the JSON data
      constructor: function(cfg) {
         var me = this;
         cfg = cfg || {};
@@ -39,5 +39,5 @@ Ext.define('TableApparatusApp.store.VersionListStore', {
             }
         }, cfg)]);
     }
-    */
+    
 });
