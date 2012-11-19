@@ -8,7 +8,7 @@ Ext.Loader.setPath('TableApparatusApp.model',  modulePath + '/ui/app/model');
 Ext.Loader.setPath('TableApparatusApp.reader',  modulePath + '/ui/app/reader');
 Ext.Loader.setPath('TableApparatusApp.controller', modulePath + '/ui/app/controller');
 Ext.Loader.setPath('TableApparatusApp.view',  modulePath + '/ui/app/view');
-Ext.Loader.setPath('Ext.ux', '/ext-4.1.1a/examples/ux');
+Ext.Loader.setPath('Ext.ux', '/sites/all/libraries/ext-4.1.1a/examples/ux');
 // keep z-index seed low to avoid interfering with drupal admin overlay
 Ext.WindowMgr.zseed = 1040;
 Ext.application({
