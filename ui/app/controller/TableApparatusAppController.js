@@ -41,7 +41,11 @@ Ext.define('TableApparatusApp.controller.TableApparatusAppController', {
         if (selectedVersionsParam){
             params['SELECTED_VERSIONS'] = selectedVersionsParam;
             params['SOME_VERSIONS'] = 1;
+        } else {
+            params['SELECTED_VERSIONS'] = 'all';
         }
+        // TODO calculate this and display sliding window for table only
+        params['FIRSTID']='1';
         var versionSelector = Ext.ComponentQuery.query('#versionSelector');
         if (versionSelector.length > 0) {
             params['version1'] = versionSelector[0].getSubmitValue();
@@ -78,8 +82,10 @@ Ext.define('TableApparatusApp.controller.TableApparatusAppController', {
         // ensure first record is loaded into versionSelector combo and force select event to fire
         // this will ensure that the other views are updated
         var versionSelector = Ext.ComponentQuery.query('#versionSelector')[0];
-        versionSelector.select(records[0]);
-        versionSelector.fireEvent('select',versionSelector,records);
+        if (records && records.length > 0){
+            versionSelector.select(records[0]);
+            versionSelector.fireEvent('select',versionSelector,records);
+        }
     },
     onVersionSelectionChange: function(combo, records, options) {
         //console.log("on version selection change", arguments)
@@ -89,11 +95,14 @@ Ext.define('TableApparatusApp.controller.TableApparatusAppController', {
             var documentId = Ext.ComponentQuery.query('#documentSelector')[0].getValue();
             // load selected version into versionView
             var versionView = Ext.ComponentQuery.query('#versionView')[0];
-
+            var params = this.getTableViewConfig();
             versionView.body.load({
                 url: '/html/' + documentId,
                 method: 'GET',
-                params: {'version1': versionName},
+                params: {
+                    'version1': versionName,
+                    'SELECTED_VERSIONS': params['SELECTED_VERSIONS'] || 'all'
+                },
                 success: function(){
                   /*  var versionViewBody = Ext.ComponentQuery.query('#versionView')[0].body;
                     var textContent = versionViewBody.dom.textContent || versionViewBody.dom.innerText;
@@ -112,7 +121,14 @@ Ext.define('TableApparatusApp.controller.TableApparatusAppController', {
             }
         }
     },
-    
+    // delayed tasks for highlighting version and table elems (to prevent multiple highlights)
+    // it would be better to attach buffer to listener, but ext does not currently allow this within control function
+    highlightFirst : new Ext.util.DelayedTask(function(args){
+        args.elem.highlight("ffff9c", { attr: 'backgroundColor', duration: 1000 });
+    }),
+    highlightTableFirst : new Ext.util.DelayedTask(function(args){
+        args.elem.highlight("ffff9c", { attr: 'backgroundColor', duration: 1000 });
+    }),
     syncScroll: function(fromVersionView){
         // temporary behaviour until proper sync scroll that does incremental loading of table is implemented:
         // fetch table length of entire version, scroll to match
@@ -120,13 +136,12 @@ Ext.define('TableApparatusApp.controller.TableApparatusAppController', {
         var tableView = Ext.ComponentQuery.query('#tableView')[0];
         var tableViewBody = tableView.body;
         var textContent = versionViewBody.dom.textContent || versionViewBody.dom.innerText;
-        var numContentCharacters = textContent.length;
+        var numContentCharacters = textContent.length + 20; // a few extra for good measure
         
         var tableOptions = this.getTableViewConfig();
         if (numContentCharacters > tableOptions.LENGTH) {
             this.getConfigWindow().down('form').getForm().findField('LENGTH').setValue(numContentCharacters);
             this.applyOptions();
-            
         }
         
         var maxScroll = 0;
@@ -137,51 +152,58 @@ Ext.define('TableApparatusApp.controller.TableApparatusAppController', {
         if (fromVersionView) {
             // get current versionView scroll amount and calculate percentage of scroll position
             maxScroll = versionViewBody.dom.scrollHeight - versionViewBody.dom.clientHeight;
-            
             currentScroll = versionViewBody.getScroll().top;
             if (currentScroll != 0){
                 percent = currentScroll / maxScroll;
             }
-
             var xy = versionViewBody.getXY();
             var firstVisible, prevVisible;
             // adjust scroll amount so that scroll amount matches with how offsetsTo is calculated
-            var currentScrollAdjusted = percent * Ext.fly(versionViewBody, '_internal').getHeight();
-            var contentCharOffset = 0;
+            var actualHeight = Ext.fly(versionViewBody, '_internal').getHeight();
+            var currentScrollAdjusted = percent * actualHeight + actualHeight/2;
+            
+            //var contentCharOffset = 0;
             // find the first element visible in the version view, which we will use to align content
-            Ext.Array.each(versionViewBody.query("*"),function(e){
+            Ext.Array.each(versionViewBody.query("span[id]"),function(e){
                 var current = Ext.get(e);
                 var offsets = current.getOffsetsTo(versionViewBody);
                 if (offsets[1] > currentScrollAdjusted){
-                    // if current's offset is greater than what would be shown on screen, use prev
-                    if (offsets[1] > (currentScrollAdjusted + versionViewBody.getHeight())) {
+                    // if current's offset is at bottom of or greater than what would be shown at bottom of screen, use prev
+                    if (offsets[1] >= (currentScrollAdjusted + actualHeight/2)) {
                         firstVisible = prevVisible;
                     } else {
-                        
                         firstVisible =  current;
                     }
                     return false;
                 }
-                contentCharOffset += (e.textContent || e.innerText).length;
+                //contentCharOffset += (e.textContent || e.innerText).length;
                 prevVisible = e;
             });
-            /*if (firstVisible) {
-                //console.log(currentScrollAdjusted + " offset of first visible",firstVisible.getOffsetsTo(versionViewBody), firstVisible.dom.textContent || firstVisible.dom.innerText);
-                firstVisible.highlight("ffff9c", { attr: 'backgroundColor', duration: 500 });
-                //firstVisible.frame("#ff0000", 1, { duration: 1000 });
-            }*/
+            if (firstVisible) {
+                this.highlightFirst.delay(200, null, null, [{elem: firstVisible}]);
+                var theid = firstVisible.getAttribute('id');
+                if(theid) {
+                    if (!theid.match("ext")) {
+                        var theNumber = theid.substring(1,theid.length).replace(/[a-z]/,'');
+                        var tableFirstVisible = Ext.get('t'+theNumber);
+                        //console.log(theNumber, firstVisible, tableFirstVisible);
+                    }
+                    
+                }
+            }
             //var alignText = (firstVisible.dom.textContent || firstVisible.dom.innerText).substring(0,10);
             
             // now try to find some text that matches close to the same percentage of scroll in tableView
             // use the content of the last row in the table as this will be the same version as displayed in version view
-            var textPercent = contentCharOffset / numContentCharacters;
-            otherMaxScroll = tableViewBody.dom.scrollWidth - tableViewBody.dom.clientWidth;
-            otherScroll = otherMaxScroll * textPercent;
+            //var textPercent = contentCharOffset / numContentCharacters;
+            //otherMaxScroll = tableViewBody.dom.scrollWidth - tableViewBody.dom.clientWidth;
+            //otherScroll = otherMaxScroll * textPercent;
 
             //otherScroll = percent * Ext.fly(tableViewBody, '_internal').getWidth();
-            var tableFirstVisible;
+            //var tableFirstVisible;
             // FIXME: scroll by same percentage until the content alignment is working 
-            tableViewBody.scrollTo('left', otherScroll);
+            //tableViewBody.scrollTo('left', otherScroll);
+            
             /*Ext.Array.each(tableViewBody.query("tr:last-child td"), function(e){
                 var current = Ext.get(e);
                 var offsets = current.getOffsetsTo(tableViewBody);
@@ -231,7 +253,8 @@ Ext.define('TableApparatusApp.controller.TableApparatusAppController', {
                 if (tableFirstVisible){
                     tableFirstVisible.scrollIntoView(tableViewBody);
                     //console.log(currentScrollAdjusted + " offset of first visible",firstVisible.getOffsetsTo(versionViewBody), firstVisible.dom.textContent || firstVisible.dom.innerText);
-                    tableFirstVisible.highlight("ffff9c", { attr: 'backgroundColor', duration: 500 });
+                    //tableFirstVisible.highlight("ffff9c", { attr: 'backgroundColor', duration: 1000 });
+                    this.highlightTableFirst.delay(200, null, null,[{elem: tableFirstVisible}]);
                     //firstVisible.frame("#ff0000", 1, { duration: 1000 });
                 }
             }
@@ -239,11 +262,8 @@ Ext.define('TableApparatusApp.controller.TableApparatusAppController', {
         } else {
             // get current tableView scroll and move versionView to match
         }
-        //console.log("from " + currentScroll + " scrolled " + (fromVersionView? "tableview":"versionview") + " " + otherScroll + " " + percent);
-        
     },
     resizeUI: function(w, h){
-        //console.log("resizeUI")
         // force resize and repositioning of app when window resizes
         var uiPanel = Ext.ComponentQuery.query("apparatusviewer")[0];
         var placeholder = Ext.get('tableuiplaceholder');
@@ -277,8 +297,7 @@ Ext.define('TableApparatusApp.controller.TableApparatusAppController', {
                 change: this.onDocumentIdChange
             },
             "#versionView": {
-                scroll: function(){this.syncScroll(true)},
-               
+                scroll: function(){this.syncScroll(true)}
             },
             "apparatusviewer": {
                 restore: function(){
@@ -293,6 +312,7 @@ Ext.define('TableApparatusApp.controller.TableApparatusAppController', {
             }*/
             
         });
+        
         Ext.getStore('VersionListStore').on('load',this.onVersionListLoad);
     }
 
