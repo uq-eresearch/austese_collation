@@ -21,7 +21,8 @@ function collationtools_help($path, $arg) {
   switch ($path) {
     case 'collationtools/apparatus':
       return t('AustESE collation views');
-
+    case 'collationtools/slider':
+      return t('Alternative slider');
     case 'admin/help#collationtools':
       // Help text for the admin section, using the module name in the path.
       return t('AustESE collation views');
@@ -56,6 +57,12 @@ function collationtools_menu() {
     'access arguments' => array('view collation tools'),
     'type' => MENU_CALLBACK
   );
+  $items['collationtools/slider'] = array(
+    'title' => 'Slider Demo',
+    'page callback' => 'collationtools_tableapparatus2',
+    'access arguments' => array('view collation tools'),
+    'type' => MENU_CALLBACK
+  );
   return $items;
 }
 
@@ -63,24 +70,30 @@ function collationtools_menu() {
 function collationtools_tableapparatus($left=null, $right=null) {
   $extjs = 'ext-4.1.1a';
   //if (($library = libraries_detect($extjs)) && !empty($library['installed'])) {
-  $modulePath = drupal_get_path('module', 'collationtools');
-  drupal_add_css($modulePath . '/ui/app.css');
+      $modulePath = drupal_get_path('module', 'collationtools');
+      drupal_add_css($modulePath . '/ui/app.css');
       drupal_add_js('/sites/all/libraries/ext-4.1.1a/ext-all.js');
-  drupal_add_js($modulePath . '/ui/app.js');
-  return theme('tableapparatus',array('left'=>$left, 'right'=>$right));
+      drupal_add_js($modulePath . '/ui/app.js');
+      return theme('tableapparatus',array('left'=>$left, 'right'=>$right));
   //} else {
   //    return t('Please install ext-4.1.1a into /sites/all/libraries');
   //}
 
+}
+function collationtools_tableapparatus2($left=null, $right=null) {
+   return theme('tableapparatus2',array('left'=>$left, 'right'=>$right));
 }
 function collationtools_theme(){
  return array(
     'tableapparatus' => array(
        'template' => 'tableui',
        'variables' => array('left'=> null, 'right'=>null)
+     ),
+     'tableapparatus2' => array(
+       'template' => 'slider',
+       'variables' => array('left'=> null, 'right'=>null)
      )
  );
-}
 
 /**
  * @} End of "defgroup collationtools".
