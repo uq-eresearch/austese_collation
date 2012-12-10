@@ -21,23 +21,17 @@ Ext.application({
         'DocumentListStore'
     ],
     views: [
-        'ApparatusViewer',
-        'OptionsWindow',
-        'TableView',
         'VersionView'
     ],
     autoCreateViewport: false,
     name: 'TableApparatusApp',
     controllers: [
-        'TableApparatusAppController'
+        'CompareAppController'
     ],
     launch: function(){
         var placeholder = Ext.get('uiplaceholder');
-        var mainWindow = Ext.create('TableApparatusApp.view.ApparatusViewer',{
+        var mainWindow = Ext.create('TableApparatusApp.view.CompareViewer',{
             renderTo: Ext.getBody(),
         }).showAt(placeholder.getX(),placeholder.getY());
-        
-        // render config window
-        Ext.create('TableApparatusApp.view.OptionsWindow').show().hide();
     }
 });

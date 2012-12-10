@@ -28,9 +28,11 @@
     white-space:nowrap;
     padding:0;
     border:0;
+    vertical-align:top;
 }
 .tableapp tr {
     border:0;
+    border-bottom:1px solid white;
 }
 .tableapp table {
     border:0;
@@ -82,14 +84,16 @@ span.bold {
     font-weight: bold;
 }
 span.deleted {
-    color: red
+   background-color:#FFDFDF;
+   border-radius: 3px;
 }
 span.added, span.inserted {
-    color: blue;
+    background-color:#E0EAF8;
+    border-radius: 3px;
     position: relative;
 }
 span.base { 
-    border-bottom: 1px dotted #ba0000;
+   border-bottom: 1px dotted #ba0000;
 }
 span.left {
     position: relative;
@@ -102,14 +106,23 @@ span.right {
 span.inserted-left {
     position: relative;
     float: left;
-    color: blue
+    background-color: #E0EAF8;
+    border-radius: 3px;
 }
 span.inserted-right {
     position: relative;
     float: right;
-    color: blue
+    background-color: #E0EAF8;
+    border-radius: 3px;
 }
 span.merged { -hrit-mergeid: id }
-a.parent { color: #eeeeee; -hrit-childid: href }
-a.child { color: #eeeeee; -hrit-parentid: href }
+a.parent { 
+    color:black;
+    border-bottom: 1px dashed purple; 
+    -hrit-childid: href 
+}
+a.child { 
+    color:black;
+    border-bottom: 1px dashed purple; 
+    -hrit-parentid: href }
 

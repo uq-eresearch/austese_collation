@@ -19,7 +19,7 @@ Ext.define('TableApparatusApp.controller.TableApparatusAppController', {
         } else {
             button.setIconCls('exitFullscreenIcon');
             // set height of placeholder to 0 to prevent overflow in browser window
-            var placeholder = Ext.get('tableuiplaceholder');
+            var placeholder = Ext.get('uiplaceholder');
             placeholder.setHeight(0);
             Ext.getBody().scrollTo('top',0);
         }
@@ -94,7 +94,7 @@ Ext.define('TableApparatusApp.controller.TableApparatusAppController', {
             var versionName = rec.get("version");
             var documentId = Ext.ComponentQuery.query('#documentSelector')[0].getValue();
             // load selected version into versionView
-            var versionView = Ext.ComponentQuery.query('#versionView')[0];
+            var versionView = Ext.ComponentQuery.query('versionview')[0];
             var params = this.getTableViewConfig();
             versionView.body.load({
                 url: '/html/' + documentId,
@@ -129,10 +129,10 @@ Ext.define('TableApparatusApp.controller.TableApparatusAppController', {
     highlightTableFirst : new Ext.util.DelayedTask(function(args){
         args.elem.highlight("ffff9c", { attr: 'backgroundColor', duration: 1000 });
     }),
-    syncScroll: function(fromVersionView){
+    syncScroll: function(event, scrolledView){
         // temporary behaviour until proper sync scroll that does incremental loading of table is implemented:
         // fetch table length of entire version, scroll to match
-        var versionViewBody = Ext.ComponentQuery.query('#versionView')[0].body;
+        var versionViewBody = Ext.ComponentQuery.query('versionview')[0].body;
         var tableView = Ext.ComponentQuery.query('#tableView')[0];
         var tableViewBody = tableView.body;
         var textContent = versionViewBody.dom.textContent || versionViewBody.dom.innerText;
@@ -149,7 +149,7 @@ Ext.define('TableApparatusApp.controller.TableApparatusAppController', {
         var currentScroll = 0;
         var percent = 0;
         var otherScroll = 0;
-        if (fromVersionView) {
+        if (scrolledView == Ext.ComponentQuery.query('versionview')[0]) {
             // get current versionView scroll amount and calculate percentage of scroll position
             maxScroll = versionViewBody.dom.scrollHeight - versionViewBody.dom.clientHeight;
             currentScroll = versionViewBody.getScroll().top;
@@ -266,7 +266,7 @@ Ext.define('TableApparatusApp.controller.TableApparatusAppController', {
     resizeUI: function(w, h){
         // force resize and repositioning of app when window resizes
         var uiPanel = Ext.ComponentQuery.query("apparatusviewer")[0];
-        var placeholder = Ext.get('tableuiplaceholder');
+        var placeholder = Ext.get('uiplaceholder');
         var newHeight = h - (placeholder.getY());
         var newWidth = w - placeholder.getX()*2;
         placeholder.setHeight(newHeight);
@@ -296,8 +296,8 @@ Ext.define('TableApparatusApp.controller.TableApparatusAppController', {
             "#documentSelector": {
                 change: this.onDocumentIdChange
             },
-            "#versionView": {
-                scroll: function(){this.syncScroll(true)}
+            "versionview": {
+                scroll: this.syncScroll
             },
             "apparatusviewer": {
                 restore: function(){
