@@ -82,6 +82,10 @@ function collationtools_menu() {
   return $items;
 }
 function collationtools_toc(){
+  $breadcrumb = array();
+  $breadcrumb[] = l('Home', '<front>');
+  $breadcrumb[] = t(drupal_get_title()); 
+  drupal_set_breadcrumb($breadcrumb);
   $list[] = l("Compare","collationtools/compare");
   $list[] = l("Table Apparatus","collationtools/apparatus");
   $render_array['collationtools_list'] = array(
@@ -91,6 +95,11 @@ function collationtools_toc(){
   return $render_array;
 }
 function collationtools_compare($left=null, $right=null) {
+  $breadcrumb = array();
+  $breadcrumb[] = l('Home', '<front>');
+  $breadcrumb[] = l('Collation Tools', 'collationtools');
+  $breadcrumb[] = t(drupal_get_title()); 
+  drupal_set_breadcrumb($breadcrumb);
   $modulePath = drupal_get_path('module', 'collationtools');
   drupal_add_css($modulePath . '/ui/app.css');
   drupal_add_js('/sites/all/libraries/ext-4.1.1a/ext-all.js');
@@ -98,6 +107,11 @@ function collationtools_compare($left=null, $right=null) {
   return theme('extjsapp',array('left'=>$left, 'right'=>$right));
 }
 function collationtools_tableapparatus($left=null, $right=null) {
+  $breadcrumb = array();
+  $breadcrumb[] = l('Home', '<front>');
+  $breadcrumb[] = l('Collation Tools', 'collationtools');
+  $breadcrumb[] = t(drupal_get_title()); 
+  drupal_set_breadcrumb($breadcrumb);
   $extjs = 'ext-4.1.1a';
   //if (($library = libraries_detect($extjs)) && !empty($library['installed'])) {
       $modulePath = drupal_get_path('module', 'collationtools');
