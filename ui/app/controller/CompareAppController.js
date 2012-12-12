@@ -31,15 +31,104 @@ Ext.define('TableApparatusApp.controller.CompareAppController', {
             versionSelector2.fireEvent('select',versionSelector1,records);
         }
     },
+   
+    moveVariant: function(button, event, direction){
+        var versions = Ext.ComponentQuery.query('versionview');
+        var currentVersion;
+        var current;
+        if (button.itemId =="prevVariantBtn1" || button.itemId == "nextVariantBtn1"){
+            // left hand side
+            currentVersion = versions[0];
+            current = parseInt(button.next("variantcountlabel").getCurrentVariant());
+        } else {
+            // right hand side
+            currentVersion = versions[1];
+            current = parseInt(button.prev("variantcountlabel").getCurrentVariant());
+        }
+        if (!current) {
+            current = 1;
+        }
+        var prev = currentVersion.body.select("span[data-variant=" + (current + (direction * 1)) + "]").elements[0];
+        if (prev) {
+            prev.click();
+            Ext.get(prev).scrollIntoView(currentVersion.body);
+        }
+    },
+    attachSyncActions: function(versionView,otherVersionView, counterLabel, otherCounterLabel,cls){
+       var variants = versionView.body.query("span[class='added'], span[class='deleted']");
+       var variantcount = variants.length;
+       counterLabel.setVariantCount(variantcount);
+       var counter = 1;
+       var controller = this;
+       counterLabel.setCurrentVariant(0);
+       otherCounterLabel.setCurrentVariant(0);
+       Ext.Array.each(variants, function(e){
+           var elem = Ext.get(e);
+           elem.set({'data-variant':counter++});
+           elem.on("click",function(event,htmlelem){
+               // TODO handle parent/child links
+               var vcurrent = elem.getAttribute("data-variant");
+               counterLabel.setCurrentVariant(vcurrent);
+               // get id of prev sibling
+               var prev = elem.prev("span[class='merged']");
+               if (!prev){
+                   var allElem = jQuery("*");
+                   var currentIndex = allElem.index(elem.dom);
+                   var nearest;
+                   jQuery(".merged").each(function(i, elm) {
+                       var index = allElem.index(elm);
+                       if (currentIndex > index) {
+                           nearest = elm;
+                       }
+                   });
+                   prev = Ext.get(nearest);
+               }
+               if (prev){
+                   var previd = prev.id;
+                   var theNumber = previd.substring(1,previd.length);
+                   var theLetter = previd.substring(0,1);
+                   var otherLetter, elemColor, otherColor, otherCls;
+                   if (cls == "added"){
+                       otherLetter = "d";
+                       otherCls = "deleted";
+                       otherColor = "ff0000";
+                       elemColor = "2156d1";
+                   } else {
+                       otherLetter = "a";
+                       otherCls = "added";
+                       otherColor = "2156d1";
+                       elemColor = "ff0000";
+                   }
+                   // highlight selected variant
+                   elem.highlight(elemColor, { attr: 'backgroundColor', duration: 1000 });
+                   // lookup corresponding variant on other side
+                   var matching = Ext.get(otherLetter+theNumber);
+                   var mvcount;
+                   if (matching){
+                       // highlight next span sibling of that elem (because we are syncing based on id of previous element to the one that was clicked)
+                       var matchingnext = matching.next("span");
+                       if (matchingnext){
+                           matching = matchingnext;
+                       }
+                       matching.highlight(otherColor, { attr: 'backgroundColor', duration: 1000 });
+                       matching.scrollIntoView(otherVersionView.body);
+                       mvcount = matching.getAttribute("data-variant");
+                   }
+                   otherCounterLabel.setCurrentVariant(mvcount);
+               }
+           });
+       });
+    },
     onVersionSelectionChange: function(combo, records, options) {
         var rec = records[0];
+        var controller = this;
         if (rec) {
             var versionName = rec.get("version");
             var versions = Ext.ComponentQuery.query('versionview');
+            var counterLabels = Ext.ComponentQuery.query('variantcountlabel');
             var version1 = Ext.ComponentQuery.query('#versionSelector1')[0].getValue();
             var version2 = Ext.ComponentQuery.query('#versionSelector2')[0].getValue();
             var documentId = Ext.ComponentQuery.query('#documentSelector')[0].getValue();
-
             // update left hand side
             versions[0].body.load({
                 url: '/html/comparison/' + documentId,
@@ -49,8 +138,9 @@ Ext.define('TableApparatusApp.controller.CompareAppController', {
                     'version2': version2,
                     'diff_kind': 'deleted'
                 },
+                scope:controller,
                 success: function(){
-                  
+                  controller.attachSyncActions(versions[0],versions[1], counterLabels[0], counterLabels[1],"deleted");
                 }
             });
             // update right hand side
@@ -62,13 +152,18 @@ Ext.define('TableApparatusApp.controller.CompareAppController', {
                     'version2': version1,
                     'diff_kind': 'added'
                 },
+                scope:controller,
                 success: function(){
-                  
+                    controller.attachSyncActions(versions[1],versions[0], counterLabels[1], counterLabels[0],"added");
                 }
             });
         }
     },
     syncScroll: function(event, scrolledView){
+        var syncButton = Ext.ComponentQuery.query("#syncButton")[0];
+        if (!syncButton.pressed){
+            return;
+        }
         var views = Ext.ComponentQuery.query("versionview");
         var otherView;
         if (scrolledView == views[0]){
@@ -110,6 +205,16 @@ Ext.define('TableApparatusApp.controller.CompareAppController', {
             },
             "versionview": {
                 scroll: this.syncScroll
+            },
+            "#prevVariantBtn1, #prevVariantBtn2":{
+                click: function(button, event) {
+                    this.moveVariant(button, event, -1);
+                }
+            },
+            "#nextVariantBtn1, #nextVariantBtn2":{
+                click: function(button, event) {
+                    this.moveVariant(button, event, 1);
+                }
             },
             "compareviewer": {
                 restore: function(){

@@ -12,7 +12,8 @@ Ext.define('TableApparatusApp.view.CompareViewer', {
         align: 'stretch'
     },
     requires: [
-        'TableApparatusApp.view.VersionView'
+        'TableApparatusApp.view.VersionView',
+        'TableApparatusApp.view.VariantCountLabel'
     ],
     alias: 'widget.compareviewer',
     initComponent: function() {
@@ -21,6 +22,55 @@ Ext.define('TableApparatusApp.view.CompareViewer', {
         Ext.applyIf(me, {
             cls: 'tableapp',
             dockedItems: [
+                { 
+                    xtype:'toolbar',
+                    dock:'bottom',
+                    items:[
+                           {
+                              itemId: 'prevVariantBtn1',
+                              iconCls: 'leftArrowIcon',
+                              //tooltip: 'Go to previous variant'
+                           },
+                           {
+                              itemId: 'nextVariantBtn1',
+                              iconCls: 'rightArrowIcon',
+                             // tooltip: 'Go to next variant'
+                           },
+                           {
+                              xtype: 'tbspacer' 
+                           },
+                           {
+                              xtype: 'variantcountlabel'
+                           },
+                           {xtype:'tbfill'},
+                           {
+                               xtype:'button',
+                               itemId: 'syncButton',
+                               enableToggle:true,
+                               pressed: true,
+                               tooltip: 'Synchronize scrolling between versions',
+                               iconCls:'syncIcon'
+                           },
+                           {xtype:'tbfill'},
+                           {
+                               xtype: 'variantcountlabel',
+                               style: {textAlign:'right'}
+                           },
+                           {
+                               xtype: 'tbspacer'
+                           },
+                           {
+                               itemId: 'prevVariantBtn2',
+                               iconCls: 'leftArrowIcon',
+                               //tooltip: 'Go to previous variant'
+                           },
+                           {
+                               itemId: 'nextVariantBtn2',
+                               iconCls: 'rightArrowIcon',
+                               //tooltip: 'Go to next variant'
+                           }
+                    ]
+                },
                 {
                     xtype: 'toolbar',
                     dock: 'top',

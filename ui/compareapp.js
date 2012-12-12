@@ -21,7 +21,8 @@ Ext.application({
         'DocumentListStore'
     ],
     views: [
-        'VersionView'
+        'VersionView',
+        'VariantCountLabel'
     ],
     autoCreateViewport: false,
     name: 'TableApparatusApp',
