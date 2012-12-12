@@ -4,6 +4,15 @@
 .fullscreenIcon {
     background-image:url(fullscreen_16x16.png);
 }
+.syncIcon {
+    background-image:url(link_16x16.png);
+}
+.leftArrowIcon {
+    background-image:url(arrow_left_16x16.png);
+}
+.rightArrowIcon {
+    background-image:url(arrow_right_16x16.png);
+}
 .exitFullscreenIcon {
     background-image:url(fullscreen_exit_16x16.png);
 }
