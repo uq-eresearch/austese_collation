@@ -155,7 +155,5 @@ Ext.define('TableApparatusApp.view.CompareViewer', {
         });
 
         me.callParent(arguments);
-        // set the default value for the document so that the change event will be triggered
-        this.down('#documentSelector').setValue('english/shakespeare/kinglear/act1/scene1');
     }
 });

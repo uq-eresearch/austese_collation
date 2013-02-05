@@ -13,12 +13,29 @@ Ext.define('TableApparatusApp.controller.CompareAppController', {
             Ext.getBody().scrollTo('top',0);
         }
     },
-    
     onDocumentIdChange: function(t, newVal, oldVal, opts) {
         // update the list of versions when the document id changes (this will trigger version views to update)
         var versionListStore = Ext.getStore("VersionListStore");
         versionListStore.getProxy().url = '/json/list/' + newVal;
         versionListStore.load();
+    },
+    initSelectDocument: function(){
+        var docombo = Ext.ComponentQuery.query('#documentSelector')[0];
+        var urlsplit = document.location.href.split('#');
+        if (urlsplit.length > 1){
+            var docpath = decodeURIComponent(urlsplit[1]);
+            var docstore = Ext.getStore('DocumentListStore');
+            
+            var rec = docstore.findRecord('documentId',docpath);
+            if (!rec || rec == -1){
+                // add to document list if it is not already in the list
+                rec = docstore.add({documentId:docpath});
+            }
+            docombo.select(rec);
+        } else {
+            // set default init value for document if one wasn't provided
+            docombo.setValue('english/shakespeare/kinglear/act1/scene1');
+        }
     },
     onVersionListLoad: function(store, records){
         // ensure first and last record are loaded into versionSelector combos and force select event to fire
@@ -31,7 +48,6 @@ Ext.define('TableApparatusApp.controller.CompareAppController', {
             versionSelector2.fireEvent('select',versionSelector1,records);
         }
     },
-   
     moveVariant: function(button, event, direction){
         var versions = Ext.ComponentQuery.query('versionview');
         var currentVersion;
@@ -201,6 +217,7 @@ Ext.define('TableApparatusApp.controller.CompareAppController', {
                 select: this.onVersionSelectionChange
             },
             "#documentSelector": {
+                render: this.initSelectDocument,
                 change: this.onDocumentIdChange
             },
             "versionview": {
@@ -226,7 +243,6 @@ Ext.define('TableApparatusApp.controller.CompareAppController', {
             }
             
         });
-        
         Ext.getStore('VersionListStore').on('load',this.onVersionListLoad);
     }
 

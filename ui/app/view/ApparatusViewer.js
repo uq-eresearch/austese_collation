@@ -36,12 +36,12 @@ Ext.define('TableApparatusApp.view.ApparatusViewer', {
                             
                             xtype: 'combobox',
                             itemId: 'documentSelector',
-                            forceSelection: true,
+                            forceSelection: false,
                             fieldLabel: 'Document',
                             store: 'DocumentListStore',
                             displayField: 'documentId',
                             valueVield: 'documentId',
-                            editable: false,
+                            editable: true,
                             grow: true,
                             labelWidth: 55
                             
@@ -85,7 +85,5 @@ Ext.define('TableApparatusApp.view.ApparatusViewer', {
         });
 
         me.callParent(arguments);
-        // set the default value for the document so that the change event will be triggered
-        this.down('#documentSelector').setValue('english/shakespeare/kinglear/act1/scene1');
     }
 });

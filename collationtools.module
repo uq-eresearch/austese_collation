@@ -79,6 +79,12 @@ function collationtools_menu() {
     'access arguments' => array('view collation tools'),
     'type' => MENU_CALLBACK
   );
+  $items['collationtools/sendtomvd'] = array(
+    'title' => 'Send to MVD',
+    'page callback' => 'collationtools_sendtomvd',
+    'access arguments' => array('view collation tools'),
+    'type' => MENU_CALLBACK
+  );
   return $items;
 }
 function collationtools_toc(){
@@ -123,6 +129,67 @@ function collationtools_tableapparatus($left=null, $right=null) {
   //    return t('Please install ext-4.1.1a into /sites/all/libraries');
   //}
 
+}
+function collationtools_sendtomvd($ids=null){
+    // FIXME: should not hardcode these values - should be in properties somewhere
+    $hritimport = 'http://' . $_SERVER['HTTP_HOST'] . "/import/";
+    // generate a unique document identifier for new MVD if docpath isn't specified
+    $docpath = $_GET['docpath'];
+    if ($docpath == null){
+        $docpath = uniqid();
+    }
+    if ($ids==null){
+        return t('Identifiers of resources to add to MVD not specified');
+    }
+    $docpath = urlencode($docpath);
+    $resids = explode(";", $ids);
+    
+    $boundary = "-------------".uniqid();
+    $data = "";
+
+    foreach($resids as $resid) {
+        if ($resid != ""){
+            $resurl = 'http://' . $_SERVER['HTTP_HOST'] . "/" . drupal_get_path('module', 'repository') . "/api/resources/" . $resid;
+            // load contents for resource
+            $contents = file_get_contents($resurl);
+            $data .= "--".$boundary."\r\n";
+            $data .= "Content-Disposition: form-data; name=\"uploadedfile[]\"; filename=\"".$resid."\"\r\n";
+            //$data .= "Content-Type: text/plain\r\n";
+            $data .= "Content-Length: ".strlen($contents)."\r\n";
+            $data .= "Content-Transfer-Encoding: binary\r\n\r\n";
+            $data .= $contents."\r\n";
+        }
+    }
+    $data .= "--".$boundary."\r\n";
+    $data .= "Content-Disposition: form-data; name=\"DOC_ID\"\r\n\r\n". $docpath. "\r\n";
+    $data .= "--". $boundary."--\n";
+    
+    $ch = curl_init();
+    // post to HRIT server import
+    curl_setopt($ch, CURLOPT_URL, trim($hritimport));
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+    curl_setopt($ch, CURLOPT_POST, 1);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, array("Content-type: multipart/form-data; boundary=".$boundary));
+    // get back status or response
+    $response = curl_exec ( $ch );
+    $err = curl_errno ( $ch );
+     
+    $header = curl_getinfo ( $ch );
+    $httpCode = curl_getinfo ( $ch, CURLINFO_HTTP_CODE );
+    
+    $error = curl_error($ch);
+    curl_close($ch);
+    // TODO store MVD document id
+    if ($err) {
+        return t('Error: '. $err . " " . $error);
+    } else {
+        return t('<p>'.$response .
+            '</p><p>If there were no errors indicated above, ' .
+            'you may now view as a <a href="/collationtools/apparatus#' . $docpath .'">table apparatus</a> or <a href="/collationtools/compare#' . $docpath .'">side-by-side comparison</a></p>');
+    }
+    
 }
 function collationtools_tableapparatus2($left=null, $right=null) {
    return theme('tableapparatus2',array('left'=>$left, 'right'=>$right));

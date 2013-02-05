@@ -78,6 +78,23 @@ Ext.define('TableApparatusApp.controller.TableApparatusAppController', {
             this.getConfigWindow().down('grid').getSelectionModel().selectAll();
         }});
     },
+    initSelectDocument: function(){
+        var docombo = Ext.ComponentQuery.query('#documentSelector')[0];
+        var urlsplit = document.location.href.split('#');
+        if (urlsplit.length > 1){
+            var docpath = decodeURIComponent(urlsplit[1]);
+            var docstore = Ext.getStore('DocumentListStore');
+            var rec = docstore.findRecord('documentId',docpath);
+            if (!rec || rec == -1){
+                // add to document list if it is not already in the list
+                rec = docstore.add({documentId:docpath});
+            }
+            docombo.select(rec);
+        } else {
+            // set default init value for document if one wasn't provided
+            docombo.setValue('english/shakespeare/kinglear/act1/scene1');
+        }
+    },
     onVersionListLoad: function(store, records){
         // ensure first record is loaded into versionSelector combo and force select event to fire
         // this will ensure that the other views are updated
@@ -294,6 +311,7 @@ Ext.define('TableApparatusApp.controller.TableApparatusAppController', {
                 select: this.onVersionSelectionChange
             },
             "#documentSelector": {
+                render: this.initSelectDocument,
                 change: this.onDocumentIdChange
             },
             "versionview": {
