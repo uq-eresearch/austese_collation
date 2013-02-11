@@ -138,6 +138,7 @@ function collationtools_sendtomvd($ids=null){
     if ($docpath == null){
         $docpath = uniqid();
     }
+    $origdocpath = $docpath;
     if ($ids==null){
         return t('Identifiers of resources to add to MVD not specified');
     }
@@ -146,9 +147,13 @@ function collationtools_sendtomvd($ids=null){
     
     $boundary = "-------------".uniqid();
     $data = "";
-
+    $idarr = "";
     foreach($resids as $resid) {
         if ($resid != ""){
+            if ($idarr){
+                $idarr.=",";
+            }
+            $idarr.="\"$resid\"";
             $resurl = 'http://' . $_SERVER['HTTP_HOST'] . "/" . drupal_get_path('module', 'repository') . "/api/resources/" . $resid;
             // load contents for resource
             $contents = file_get_contents($resurl);
@@ -181,13 +186,69 @@ function collationtools_sendtomvd($ids=null){
     
     $error = curl_error($ch);
     curl_close($ch);
-    // TODO store MVD document id
+    
     if ($err) {
-        return t('Error: '. $err . " " . $error);
+        return t('Error: '. $err . " " . $error . " " . $response);
     } else {
-        return t('<p>'.$response .
-            '</p><p>If there were no errors indicated above, ' .
-            'you may now view as a <a href="/collationtools/apparatus#' . $docpath .'">table apparatus</a> or <a href="/collationtools/compare#' . $docpath .'">side-by-side comparison</a></p>');
+        $message = "";
+        
+        // Unfortunately HRIT Server does not use HTTP status to indicate errors,
+        // instead look for 'rror' in response
+        $hriterror = preg_match('/rror/', $response);
+        if ($hriterror == 0){
+            // try to fetch json for created mvd
+            $json = file_get_contents('http://' . $_SERVER['HTTP_HOST'] . "/json/list/" . $origdocpath);
+            $hriterror = preg_match('/HritServer Error/', $response);
+            //$message =  "<p>MVD created. You may now view <a href='/collationtools/apparatus#$docpath'>table apparatus</a> or <a href='/collationtools/compare#$docpath'>side-by-side comparison</a></p>";
+            if ($hriterror == 0){
+                // store MVD details in db for now
+                // parse existing mvd results to check if one exists with same name, get id and delete
+                $mvdsearchurl = 'http://' . $_SERVER['HTTP_HOST'] . "/" . drupal_get_path('module', 'repository') . "/api/mvds/?searchField=name&q=" . $docpath . "$";
+                $mvdsearch = file_get_contents($mvdsearchurl);
+                $mvdsearchjson = json_decode($mvdsearch, TRUE);
+                $existingmvdcount = $mvdsearchjson['count'];
+                if ($existingmvdcount != 0){
+                    $existingmvd = $mvdsearchjson['results'][0]['id'];
+                    $ch3 = curl_init();
+                    curl_setopt($ch3, CURLOPT_CUSTOMREQUEST, 'DELETE');
+                    curl_setopt($ch3, CURLOPT_URL, trim('http://' . $_SERVER['HTTP_HOST'] . "/" . drupal_get_path('module', 'repository') . "/api/mvds/" . $existingmvd));
+                    $dbresponse = curl_exec ( $ch3 );
+                    $dberr = curl_errno ( $ch3 );
+                    $dberror = curl_error($ch3);
+                    curl_close($ch3);
+                    if ($dberr){
+                        return t('Error: '. $dberr . " " . $dberror .$dbresponse);
+                    }
+                }
+                // post new MVD details to db
+                $mvddburl = 'http://' . $_SERVER['HTTP_HOST'] . "/" . drupal_get_path('module', 'repository') . "/api/mvds/";
+                $mvdjson = "{\"name\":\"$origdocpath\",\"resources\":[$idarr]}";
+                $ch2 = curl_init();
+                curl_setopt($ch2, CURLOPT_URL, trim($mvddburl));
+                curl_setopt($ch2, CURLOPT_RETURNTRANSFER, 1);
+                curl_setopt($ch2, CURLOPT_FOLLOWLOCATION, 1);
+                curl_setopt($ch2, CURLOPT_POST, 1);
+                curl_setopt($ch2, CURLOPT_POSTFIELDS, $mvdjson);
+                curl_setopt($ch2, CURLOPT_HTTPHEADER, array("Content-type: application/json;"));
+                
+                $dbresponse = curl_exec ( $ch2 );
+                $dberr = curl_errno ( $ch2 );
+                $dberror = curl_error($ch2);
+                curl_close($ch2);
+                if ($dberr){
+                    return t('Error: '. $dberr . " " . $dberror .$dbresponse);
+                }
+                
+                // message is success message
+                $message =  "<p>MVD created. You may now view <a href='/collationtools/apparatus#$docpath'>table apparatus</a> or <a href='/collationtools/compare#$docpath'>side-by-side comparison</a></p>";
+            } else {
+                $message = "<p>MVD was not created. Refer to the log above for the cause.";
+            }
+        } else {
+            // else message is failure message
+            $message = "<p>There was an error creating the MVD. Refer to the log above for the cause. If the log does not indicate a reason, the operation may have failed as a result of versions being too large or too much variation between versions. Try splitting larger transcriptions into smaller sections.</p>";
+        }
+        return t('<p>'.$response . '</p>' . $message);
     }
     
 }
