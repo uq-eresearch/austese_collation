@@ -23,6 +23,6 @@ Ext.define('TableApparatusApp.view.TableView', {
     onBodyScroll: function(e, t, opts) {
         // fire custom event when body scrolls that controller can respond to 
         // (because it can only listen for component events, not element events)
-        this.fireEvent('scroll', e);
+        this.fireEvent('scroll', this, e);
     }
 });

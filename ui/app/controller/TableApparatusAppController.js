@@ -280,6 +280,9 @@ Ext.define('TableApparatusApp.controller.TableApparatusAppController', {
             // get current tableView scroll and move versionView to match
         }
     },
+    moveSiglum: function(panel, e){
+        jQuery('td.siglumleft').css('left',panel.body.dom.scrollLeft);
+    },
     resizeUI: function(w, h){
         // force resize and repositioning of app when window resizes
         var uiPanel = Ext.ComponentQuery.query("apparatusviewer")[0];
@@ -316,6 +319,9 @@ Ext.define('TableApparatusApp.controller.TableApparatusAppController', {
             },
             "versionview": {
                 scroll: this.syncScroll
+            },
+            "tableview": {
+                scroll: this.moveSiglum
             },
             "apparatusviewer": {
                 restore: function(){
