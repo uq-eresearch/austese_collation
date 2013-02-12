@@ -39,5 +39,10 @@ Ext.application({
         
         // render config window
         Ext.create('TableApparatusApp.view.OptionsWindow').show().hide();
+        
+        var fullscreen = jQuery('#metadata').data('fullscreen');
+        if (fullscreen == 1){
+            this.getController('TableApparatusAppController').toggleFullscreen(Ext.ComponentQuery.query('#toggleFullscreenButton')[0]);
+        }
     }
 });

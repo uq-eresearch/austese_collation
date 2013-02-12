@@ -34,5 +34,10 @@ Ext.application({
         var mainWindow = Ext.create('TableApparatusApp.view.CompareViewer',{
             renderTo: Ext.getBody(),
         }).showAt(placeholder.getX(),placeholder.getY());
+        
+        var fullscreen = jQuery('#metadata').data('fullscreen');
+        if (fullscreen == 1){
+            this.getController('CompareAppController').toggleFullscreen(Ext.ComponentQuery.query('#toggleFullscreenButton')[0]);
+        }
     }
 });
