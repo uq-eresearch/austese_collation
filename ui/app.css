@@ -68,6 +68,7 @@
     background-color:white;
     z-index: 100;
     width: 40px;
+    overflow:hidden;
 }
 .tableapp td.siglumhidden {
     display: none;
