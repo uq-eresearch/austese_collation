@@ -2,7 +2,11 @@
 <link rel="stylesheet" href="/sites/all/libraries/ext-4.1.1a/resources/css/ext-all-gray.css">
 <?php 
 $modulePrefix = arg(0);
-$fullscreen = $user->data['fullscreen'];
+if (property_exists($user,'data')){
+ $fullscreen = $user->data['fullscreen'];
+} else {
+ $fullscreen = false;
+}
 ?>
 <div id="metadata"
  <?php if (user_access('edit metadata')): ?>
