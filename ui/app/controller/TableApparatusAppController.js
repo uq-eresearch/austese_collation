@@ -113,6 +113,7 @@ Ext.define('TableApparatusApp.controller.TableApparatusAppController', {
             // load selected version into versionView
             var versionView = Ext.ComponentQuery.query('versionview')[0];
             var params = this.getTableViewConfig();
+            var baseurl = this.baseurl;
             versionView.body.load({
                 url: '/html/' + documentId,
                 method: 'GET',
@@ -121,6 +122,10 @@ Ext.define('TableApparatusApp.controller.TableApparatusAppController', {
                     'SELECTED_VERSIONS': params['SELECTED_VERSIONS'] || 'all'
                 },
                 success: function(){
+                    var resid = versionName.split('/').pop();
+                    var dataId = baseurl + "/repository/resources/" + resid + "/content";
+                    this.target.dom.setAttribute('data-id', dataId);
+                    enableAnnotations();
                   /*  var versionViewBody = Ext.ComponentQuery.query('#versionView')[0].body;
                     var textContent = versionViewBody.dom.textContent || versionViewBody.dom.innerText;
                     var numContentCharacters = textContent.length;
@@ -296,6 +301,7 @@ Ext.define('TableApparatusApp.controller.TableApparatusAppController', {
         uiPanel.showAt(placeholder.getX(), placeholder.getY());
     },
     init: function(application) {
+        this.baseurl = jQuery('#metadata').data('baseurl');
         Ext.EventManager.onWindowResize(this.resizeUI, this);
         this.control({
             "#configureButton": {
