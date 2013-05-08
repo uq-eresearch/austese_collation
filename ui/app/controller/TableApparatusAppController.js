@@ -64,7 +64,7 @@ Ext.define('TableApparatusApp.controller.TableApparatusAppController', {
             method: 'GET',
             params: params
         });
-        
+
         this.getConfigWindow().hide();
     },
     onDocumentIdChange: function(t, newVal, oldVal, opts) {
@@ -72,7 +72,7 @@ Ext.define('TableApparatusApp.controller.TableApparatusAppController', {
         var versionListStore = Ext.getStore("VersionListStore");
         // TODO: update to /json/list when id is included in json
         versionListStore.getProxy().url = '/json/list/' + newVal;
-        
+
         // after version list has loaded, reset the table view version selection options
         versionListStore.load({scope: this, callback:function(){
             this.getConfigWindow().down('grid').getSelectionModel().selectAll();
@@ -159,13 +159,13 @@ Ext.define('TableApparatusApp.controller.TableApparatusAppController', {
         var tableViewBody = tableView.body;
         var textContent = versionViewBody.dom.textContent || versionViewBody.dom.innerText;
         var numContentCharacters = textContent.length + 20; // a few extra for good measure
-        
+
         var tableOptions = this.getTableViewConfig();
         if (numContentCharacters > tableOptions.LENGTH) {
             this.getConfigWindow().down('form').getForm().findField('LENGTH').setValue(numContentCharacters);
             this.applyOptions();
         }
-        
+
         var maxScroll = 0;
         var otherMaxScroll = 0;
         var currentScroll = 0;
@@ -183,7 +183,7 @@ Ext.define('TableApparatusApp.controller.TableApparatusAppController', {
             // adjust scroll amount so that scroll amount matches with how offsetsTo is calculated
             var actualHeight = Ext.fly(versionViewBody, '_internal').getHeight();
             var currentScrollAdjusted = percent * actualHeight + actualHeight/2;
-            
+
             //var contentCharOffset = 0;
             // find the first element visible in the version view, which we will use to align content
             Ext.Array.each(versionViewBody.query("span[id]"),function(e){
@@ -210,11 +210,10 @@ Ext.define('TableApparatusApp.controller.TableApparatusAppController', {
                         var tableFirstVisible = Ext.get('t'+theNumber);
                         //console.log(theNumber, firstVisible, tableFirstVisible);
                     }
-                    
                 }
             }
             //var alignText = (firstVisible.dom.textContent || firstVisible.dom.innerText).substring(0,10);
-            
+
             // now try to find some text that matches close to the same percentage of scroll in tableView
             // use the content of the last row in the table as this will be the same version as displayed in version view
             //var textPercent = contentCharOffset / numContentCharacters;
@@ -340,9 +339,8 @@ Ext.define('TableApparatusApp.controller.TableApparatusAppController', {
             /*,"#tableView": {
                 scroll: this.syncScroll
             }*/
-            
         });
-        
+
         Ext.getStore('VersionListStore').on('load',this.onVersionListLoad);
     }
 

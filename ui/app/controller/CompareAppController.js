@@ -25,7 +25,7 @@ Ext.define('TableApparatusApp.controller.CompareAppController', {
         if (urlsplit.length > 1){
             var docpath = decodeURIComponent(urlsplit[1]);
             var docstore = Ext.getStore('DocumentListStore');
-            
+
             var rec = docstore.findRecord('documentId',docpath);
             if (!rec || rec == -1){
                 // add to document list if it is not already in the list
@@ -55,11 +55,11 @@ Ext.define('TableApparatusApp.controller.CompareAppController', {
         if (button.itemId =="prevVariantBtn1" || button.itemId == "nextVariantBtn1"){
             // left hand side
             currentVersion = versions[0];
-            current = parseInt(button.next("variantcountlabel").getCurrentVariant());
+            current = parseInt(button.next("variantcountlabel").getCurrentVariant(), 10);
         } else {
             // right hand side
             currentVersion = versions[1];
-            current = parseInt(button.prev("variantcountlabel").getCurrentVariant());
+            current = parseInt(button.prev("variantcountlabel").getCurrentVariant(), 10);
         }
         if (!current) {
             current = 1;
