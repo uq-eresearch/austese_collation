@@ -74,9 +74,9 @@ Ext.define('TableApparatusApp.view.CompareViewer', {
                 {
                     xtype: 'toolbar',
                     dock: 'top',
+                    enableOverflow: true,
                     items: [
                         {
-                            
                             xtype: 'combobox',
                             itemId: 'documentSelector',
                             forceSelection: true,
@@ -87,7 +87,6 @@ Ext.define('TableApparatusApp.view.CompareViewer', {
                             editable: false,
                             grow: true,
                             labelWidth: 55
-                            
                         },
                         {
                             xtype: 'tbfill'
@@ -101,8 +100,10 @@ Ext.define('TableApparatusApp.view.CompareViewer', {
                             store: 'VersionListStore',
                             displayField: 'longname',
                             valueField: 'version',
-                            grow: true,
-                            labelWidth: 55
+                            matchFieldWidth: false,
+                            editable: false,
+                            labelWidth: 55,
+                            width: 350
                         },
                         {
                             xtype: 'combobox',
@@ -113,8 +114,10 @@ Ext.define('TableApparatusApp.view.CompareViewer', {
                             store: 'VersionListStore',
                             displayField: 'longname',
                             valueField: 'version',
-                            grow: true,
-                            labelWidth: 55
+                            matchFieldWidth: false,
+                            editable: false,
+                            labelWidth: 55,
+                            width: 350
                         },
                         {
                             xtype: 'button',
