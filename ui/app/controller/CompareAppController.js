@@ -145,6 +145,7 @@ Ext.define('TableApparatusApp.controller.CompareAppController', {
             var version1 = Ext.ComponentQuery.query('#versionSelector1')[0].getValue();
             var version2 = Ext.ComponentQuery.query('#versionSelector2')[0].getValue();
             var documentId = Ext.ComponentQuery.query('#documentSelector')[0].getValue();
+            var baseurl = this.baseurl;
             // update left hand side
             versions[0].body.load({
                 url: '/html/comparison/' + documentId,
@@ -155,8 +156,18 @@ Ext.define('TableApparatusApp.controller.CompareAppController', {
                     'diff_kind': 'deleted'
                 },
                 scope:controller,
-                success: function(){
+                success: function(response){
                   controller.attachSyncActions(versions[0],versions[1], counterLabels[0], counterLabels[1],"deleted");
+
+                    if (!response.responseText) {
+                        var resid = version1.split('/')[1];
+                        var dataId = baseurl + "/repository/resources/" + resid + "/content";
+                        var bodyEl = response.target.dom;
+                        jQuery(bodyEl).removeAnnotator().data('id', dataId);
+                        bodyEl.annotationsEnabled = false;
+
+                        enableAnnotationsOnElement(bodyEl);
+                    }
                 }
             });
             // update right hand side
@@ -169,8 +180,18 @@ Ext.define('TableApparatusApp.controller.CompareAppController', {
                     'diff_kind': 'added'
                 },
                 scope:controller,
-                success: function(){
+                success: function(response){
                     controller.attachSyncActions(versions[1],versions[0], counterLabels[1], counterLabels[0],"added");
+
+                    if (!response.responseText) {
+                        var resid = version2.split('/')[1];
+                        var dataId = baseurl + "/repository/resources/" + resid + "/content";
+                        var bodyEl = response.target.dom;
+                        jQuery(bodyEl).removeAnnotator().data('id', dataId);
+                        bodyEl.annotationsEnabled = false;
+
+                        enableAnnotationsOnElement(bodyEl);
+                    }
                 }
             });
         }
@@ -205,6 +226,7 @@ Ext.define('TableApparatusApp.controller.CompareAppController', {
         uiPanel.showAt(placeholder.getX(), placeholder.getY());
     },
     init: function(application) {
+        this.baseurl = jQuery('#metadata').data('baseurl');
         Ext.EventManager.onWindowResize(this.resizeUI, this);
         this.control({
             "#configureButton": {

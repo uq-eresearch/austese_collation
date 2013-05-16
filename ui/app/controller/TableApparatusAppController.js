@@ -121,11 +121,19 @@ Ext.define('TableApparatusApp.controller.TableApparatusAppController', {
                     'version1': versionName,
                     'SELECTED_VERSIONS': params['SELECTED_VERSIONS'] || 'all'
                 },
-                success: function(){
-                    var resid = versionName.split('/').pop();
-                    var dataId = baseurl + "/repository/resources/" + resid + "/content";
-                    this.target.dom.setAttribute('data-id', dataId);
-                    enableAnnotations();
+                success: function(response, options){
+                    // Weirdly, this function is called twice.
+                    // First for AJAX response success, then after the content is loaded.
+                    // We're only interested in after the content is loaded
+                    if (!response.responseText) {
+                        var resid = versionName.split('/')[1];
+                        var dataId = baseurl + "/repository/resources/" + resid + "/content";
+                        var bodyEl = this.target.dom;
+                        jQuery(bodyEl).removeAnnotator().data('id', dataId);
+                        bodyEl.annotationsEnabled = false;
+
+                        enableAnnotationsOnElement(bodyEl);
+                    }
                   /*  var versionViewBody = Ext.ComponentQuery.query('#versionView')[0].body;
                     var textContent = versionViewBody.dom.textContent || versionViewBody.dom.innerText;
                     var numContentCharacters = textContent.length;

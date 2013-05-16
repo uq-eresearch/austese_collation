@@ -41,7 +41,7 @@ Ext.define('TableApparatusApp.view.ApparatusViewer', {
                             store: 'DocumentListStore',
                             displayField: 'documentId',
                             valueVield: 'documentId',
-                            editable: true,
+                            editable: false,
                             grow: true,
                             labelWidth: 55
                             
@@ -49,12 +49,13 @@ Ext.define('TableApparatusApp.view.ApparatusViewer', {
                         {
                             xtype: 'combobox',
                             itemId: 'versionSelector',
-                            typeAhead: true,
+                            // typeAhead: true,
                             forceSelection: true,
                             fieldLabel: 'Base Version',
                             store: 'VersionListStore',
                             displayField: 'longname',
                             valueField: 'version',
+                            editable: false,
                             grow: true,
                             labelWidth: 70
                         },
