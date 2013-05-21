@@ -70,6 +70,21 @@ Ext.define('TableApparatusApp.controller.CompareAppController', {
             Ext.get(prev).scrollIntoView(currentVersion.body);
         }
     },
+    viewRecord: function(button, event){
+        if (button.itemId == "viewRecordBtn1"){
+            // left hand side
+            var version1 = Ext.ComponentQuery.query('#versionSelector1')[0].getValue();
+            var resid = version1.split('/')[1];
+            var dataId = this.baseurl + "/repository/resources/" + resid + "/content";
+            document.location.href=dataId;
+        } else {
+            // right hand side
+            var version2 = Ext.ComponentQuery.query('#versionSelector2')[0].getValue();
+            var resid = version2.split('/')[1];
+            var dataId = this.baseurl + "/repository/resources/" + resid + "/content";
+            document.location.href=dataId;
+        }
+    },
     attachSyncActions: function(versionView,otherVersionView, counterLabel, otherCounterLabel,cls){
        var variants = versionView.body.query("span[class='added'], span[class='deleted']");
        var variantcount = variants.length;
@@ -254,6 +269,9 @@ Ext.define('TableApparatusApp.controller.CompareAppController', {
                 click: function(button, event) {
                     this.moveVariant(button, event, 1);
                 }
+            },
+            "#viewRecordBtn1, #viewRecordBtn2":{
+                click: this.viewRecord
             },
             "compareviewer": {
                 restore: function(){
