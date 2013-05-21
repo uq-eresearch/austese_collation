@@ -74,13 +74,15 @@ Ext.define('TableApparatusApp.controller.CompareAppController', {
         if (button.itemId == "viewRecordBtn1"){
             // left hand side
             var version1 = Ext.ComponentQuery.query('#versionSelector1')[0].getValue();
-            var resid = version1.split('/')[1];
+            var resid = version1.split('/');
+            resid=resid[resid.length - 1];
             var dataId = this.baseurl + "/repository/resources/" + resid + "/content";
             document.location.href=dataId;
         } else {
             // right hand side
             var version2 = Ext.ComponentQuery.query('#versionSelector2')[0].getValue();
-            var resid = version2.split('/')[1];
+            var resid = version2.split('/');
+            resid = resid[resid.length - 1];
             var dataId = this.baseurl + "/repository/resources/" + resid + "/content";
             document.location.href=dataId;
         }
@@ -175,12 +177,13 @@ Ext.define('TableApparatusApp.controller.CompareAppController', {
                   controller.attachSyncActions(versions[0],versions[1], counterLabels[0], counterLabels[1],"deleted");
 
                     if (!response.responseText) {
-                        var resid = version1.split('/')[1];
+                        var resid = version1.split('/');
+                        resid=resid[resid.length -1];
                         var dataId = baseurl + "/repository/resources/" + resid + "/content";
                         var bodyEl = response.target.dom;
                         jQuery(bodyEl).removeAnnotator().data('id', dataId);
                         bodyEl.annotationsEnabled = false;
-
+                        console.log("enable anno on compare body", bodyEl)
                         enableAnnotationsOnElement(bodyEl);
                     }
                 }

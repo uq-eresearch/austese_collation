@@ -69,7 +69,8 @@ Ext.define('TableApparatusApp.controller.TableApparatusAppController', {
     },
     viewRecord: function(button, event){ 
         var version1 = Ext.ComponentQuery.query('#versionSelector')[0].getValue();
-        var resid = version1.split('/')[1];
+        var resid = version1.split('/');
+        resid = resid[resid.length - 1];
         var dataId = this.baseurl + "/repository/resources/" + resid + "/content";
         document.location.href=dataId;
     },
@@ -132,7 +133,8 @@ Ext.define('TableApparatusApp.controller.TableApparatusAppController', {
                     // First for AJAX response success, then after the content is loaded.
                     // We're only interested in after the content is loaded
                     if (!response.responseText) {
-                        var resid = versionName.split('/')[1];
+                        var resid = versionName.split('/');
+                        resid = resid[resid.length - 1];
                         var dataId = baseurl + "/repository/resources/" + resid + "/content";
                         var bodyEl = this.target.dom;
                         jQuery(bodyEl).removeAnnotator().data('id', dataId);
