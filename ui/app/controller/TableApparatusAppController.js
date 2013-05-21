@@ -67,6 +67,12 @@ Ext.define('TableApparatusApp.controller.TableApparatusAppController', {
 
         this.getConfigWindow().hide();
     },
+    viewRecord: function(button, event){ 
+        var version1 = Ext.ComponentQuery.query('#versionSelector')[0].getValue();
+        var resid = version1.split('/')[1];
+        var dataId = this.baseurl + "/repository/resources/" + resid + "/content";
+        document.location.href=dataId;
+    },
     onDocumentIdChange: function(t, newVal, oldVal, opts) {
         // update the list of versions when the document id changes (this will trigger version view to update)
         var versionListStore = Ext.getStore("VersionListStore");
@@ -313,6 +319,9 @@ Ext.define('TableApparatusApp.controller.TableApparatusAppController', {
         this.control({
             "#configureButton": {
                 click: this.showConfigureOptions
+            },
+            "#viewRecordBtn": {
+                click: this.viewRecord
             },
             "#toggleFullscreenButton": {
                 click: this.toggleFullscreen

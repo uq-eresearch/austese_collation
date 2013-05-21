@@ -30,6 +30,11 @@ Ext.define('TableApparatusApp.view.ApparatusViewer', {
                             itemId: 'configureButton'
                         },
                         {
+                            xtype: 'button',
+                            itemId: 'viewRecordBtn',
+                            text: 'View record'
+                        },
+                        {
                             xtype: 'tbfill'
                         },
                         {
