@@ -142,7 +142,7 @@ function collationtools_sendtomvd($ids=null){
     if ($ids==null){
         return t('Identifiers of resources to add to MVD not specified');
     }
-    $docpath = urlencode($docpath);
+    // $docpath = urlencode($docpath);
     $resids = explode(";", $ids);
     
     $boundary = "-------------".uniqid();
@@ -156,10 +156,17 @@ function collationtools_sendtomvd($ids=null){
             $idarr.="\"$resid\"";
             $resurl = 'http://' . $_SERVER['HTTP_HOST'] . "/" . drupal_get_path('module', 'repository') . "/api/resources/" . $resid;
             // load contents for resource
-            $contents = file_get_contents($resurl);
+            // $contents = file_get_contents($resurl);
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $resurl);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); // return the transfer as a string
+            $contents = curl_exec($ch);
+            $contenttype = curl_getinfo($ch, CURLINFO_CONTENT_TYPE);
+            curl_close($ch);
+
             $data .= "--".$boundary."\r\n";
             $data .= "Content-Disposition: form-data; name=\"uploadedfile[]\"; filename=\"".$resid."\"\r\n";
-            //$data .= "Content-Type: text/plain\r\n";
+            $data .= "Content-Type: ".$contenttype."\r\n";
             $data .= "Content-Length: ".strlen($contents)."\r\n";
             $data .= "Content-Transfer-Encoding: binary\r\n\r\n";
             $data .= $contents."\r\n";
