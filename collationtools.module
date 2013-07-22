@@ -42,6 +42,10 @@ function collationtools_permission() {
     'view collation tools' => array(
       'title' => t('View collation tools'),
       'description' => t('Allow users to view collation tools'),
+    ),
+    'edit mvds' => array(
+       'title' => t('Edit MVDs'),
+       'description' => t('Allow users to create or update MVDs')
     )
   );
 }
@@ -82,7 +86,7 @@ function collationtools_menu() {
   $items['collationtools/sendtomvd'] = array(
     'title' => 'Send to MVD',
     'page callback' => 'collationtools_sendtomvd',
-    'access arguments' => array('view collation tools'),
+    'access arguments' => array('edit mvds'),
     'type' => MENU_CALLBACK
   );
   return $items;
@@ -154,6 +158,8 @@ function collationtools_sendtomvd($ids=null){
                 $idarr.=",";
             }
             $idarr.="\"$resid\"";
+            // look up resource metadata - use short id or original filename
+            
             $resurl = 'http://' . $_SERVER['HTTP_HOST'] . "/" . drupal_get_path('module', 'repository') . "/api/resources/" . $resid;
             // load contents for resource
             // $contents = file_get_contents($resurl);
