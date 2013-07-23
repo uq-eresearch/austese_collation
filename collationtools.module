@@ -170,19 +170,19 @@ function collationtools_sendtomvd($ids=null){
             $resmetadata = curl_exec($ch);
             curl_close($ch);
             
-            $resjson=json_decode($resmetadata);
-            $shortname = $resjson->metadata->shortname;
+            $resjson = json_decode($resmetadata);
             $filename = $resjson->filename;
-            if ($shortname != null && $shortname != ""){
-                $versionid = $shortname;
+            if (!empty($resjson->metadata->shortname)) {
+                $versionid = $resjson->metadata->shortname;
             } else {
                 $dotpos = strrpos($filename, '.');
                 if ($dotpos > 0) {
                     $versionid = substr($filename, 0, $dotpos);
                 } else {
                     $versionid = $filename;
-                } 
+                }
             }
+            $versionid = str_replace('.', '_', $versionid);
             // load contents for resource
             // $contents = file_get_contents($resurl);
             $ch = curl_init();
