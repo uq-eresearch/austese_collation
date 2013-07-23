@@ -158,9 +158,31 @@ function collationtools_sendtomvd($ids=null){
                 $idarr.=",";
             }
             $idarr.="\"$resid\"";
-            // look up resource metadata - use short id or original filename
             
             $resurl = 'http://' . $_SERVER['HTTP_HOST'] . "/" . drupal_get_path('module', 'repository') . "/api/resources/" . $resid;
+            // look up resource metadata - use short id or original filename minus extension
+            $ch = curl_init();
+            curl_setopt($ch,CURLOPT_HTTPHEADER, array(
+                "Accept: application/json"
+            ));
+            curl_setopt($ch, CURLOPT_URL, $resurl);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); // return the transfer as a string
+            $resmetadata = curl_exec($ch);
+            curl_close($ch);
+            
+            $resjson=json_decode($resmetadata);
+            $shortname = $resjson->metadata->shortname;
+            $filename = $resjson->filename;
+            if ($shortname != null && $shortname != ""){
+                $versionid = $shortname;
+            } else {
+                $dotpos = strrpos($filename, '.');
+                if ($dotpos > 0) {
+                    $versionid = substr($filename, 0, $dotpos);
+                } else {
+                    $versionid = $filename;
+                } 
+            }
             // load contents for resource
             // $contents = file_get_contents($resurl);
             $ch = curl_init();
@@ -171,7 +193,7 @@ function collationtools_sendtomvd($ids=null){
             curl_close($ch);
 
             $data .= "--".$boundary."\r\n";
-            $data .= "Content-Disposition: form-data; name=\"uploadedfile[]\"; filename=\"".$resid."\"\r\n";
+            $data .= "Content-Disposition: form-data; name=\"uploadedfile[]\"; filename=\"".$versionid."\"\r\n";
             $data .= "Content-Type: ".$contenttype."\r\n";
             $data .= "Content-Length: ".strlen($contents)."\r\n";
             $data .= "Content-Transfer-Encoding: binary\r\n\r\n";
