@@ -84,7 +84,7 @@ Ext.define('TableApparatusApp.controller.TableApparatusAppController', {
              resuuid = res.id;
            } 
         }
-        var dataId = this.baseurl + "/repository/resources/" + resuuid + "/content";
+        var dataId = this.baseurl + "/repository/resources/" + resuuid;
         document.location.href=dataId;
     },
     onDocumentIdChange: function(t, newVal, oldVal, opts) {
