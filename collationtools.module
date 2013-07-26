@@ -157,7 +157,7 @@ function collationtools_sendtomvd($ids=null){
             if ($idarr){
                 $idarr.=",";
             }
-            $idarr.="\"$resid\"";
+            
             
             $resurl = 'http://' . $_SERVER['HTTP_HOST'] . "/" . drupal_get_path('module', 'repository') . "/api/resources/" . $resid;
             // look up resource metadata - use short id or original filename minus extension
@@ -183,6 +183,7 @@ function collationtools_sendtomvd($ids=null){
                 }
             }
             $versionid = str_replace('.', '_', $versionid);
+            $idarr.= "{\"id\":\"$resid\",\"name\":\"$versionid\"}";
             // load contents for resource
             // $contents = file_get_contents($resurl);
             $ch = curl_init();

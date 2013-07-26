@@ -22,18 +22,18 @@ Ext.define('TableApparatusApp.controller.CompareAppController', {
     initSelectDocument: function(){
         var docombo = Ext.ComponentQuery.query('#documentSelector')[0];
         var urlsplit = document.location.href.split('#');
+        var docstore = Ext.getStore('DocumentListStore');
         if (urlsplit.length > 1){
             var docpath = decodeURIComponent(urlsplit[1]);
-            var docstore = Ext.getStore('DocumentListStore');
-
             var rec = docstore.findRecord('documentId',docpath);
             if (!rec || rec == -1){
                 // add to document list if it is not already in the list
                 rec = docstore.add({documentId:docpath});
-            }
+            } 
             docombo.select(rec);
         } else {
             // set default init value for document if one wasn't provided
+            docstore.add({documentId:'english/shakespeare/kinglear/act1/scene1'});
             docombo.setValue('english/shakespeare/kinglear/act1/scene1');
         }
     },
@@ -257,7 +257,6 @@ Ext.define('TableApparatusApp.controller.CompareAppController', {
                 select: this.onVersionSelectionChange
             },
             "#documentSelector": {
-                render: this.initSelectDocument,
                 change: this.onDocumentIdChange
             },
             "versionview": {
@@ -286,6 +285,7 @@ Ext.define('TableApparatusApp.controller.CompareAppController', {
             }
             
         });
+        Ext.getStore('DocumentListStore').on('load',this.initSelectDocument);
         Ext.getStore('VersionListStore').on('load',this.onVersionListLoad);
     }
 

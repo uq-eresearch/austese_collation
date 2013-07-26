@@ -9,18 +9,15 @@ Ext.define('TableApparatusApp.store.DocumentListStore', {
         var me = this;
         cfg = cfg || {};
         me.callParent([Ext.apply({
-            // TODO: Eventually the possible document values should be loaded from the repository
-            data: [
-                   {documentId: 'english/shakespeare/kinglear/act1/scene1'},
-                   {documentId: 'italian/capuana/aristofanunculos/Introduction'},
-                   {documentId: 'italian/capuana/aristofanunculos/Frammento 1'}
-            ],
             storeId: 'DocumentListStore',
+            autoLoad: true,
             model: 'TableApparatusApp.model.DocumentListModel',
             proxy: {
-                type: 'memory',
+                type: 'ajax',
+                url: '/sites/all/modules/austese_repository/api/mvds/',
                 reader: {
-                    type: 'json'
+                    type: 'json',
+                    root: 'results'
                 }
             }
         }, cfg)]);
