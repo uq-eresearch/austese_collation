@@ -68,10 +68,23 @@ Ext.define('TableApparatusApp.controller.TableApparatusAppController', {
         this.getConfigWindow().hide();
     },
     viewRecord: function(button, event){ 
+        var docstore = Ext.getStore('DocumentListStore');
+        var docombo = Ext.ComponentQuery.query('#documentSelector')[0];
+        var docpath = docombo.getValue();
+        var docrecord = docstore.getById(docpath);
+        
         var version1 = Ext.ComponentQuery.query('#versionSelector')[0].getValue();
-        var resid = version1.split('/');
-        resid = resid[resid.length - 1];
-        var dataId = this.baseurl + "/repository/resources/" + resid + "/content";
+        var resname = version1.split('/');
+        resname = resname[resname.length - 1];
+        var resuuid = resname;
+        var resources = docrecord.get("resources");
+        for (var i = 0; i < resources.length; i++){
+           var res = resources[i];
+           if (res.name && res.name == resname){
+             resuuid = res.id;
+           } 
+        }
+        var dataId = this.baseurl + "/repository/resources/" + resuuid + "/content";
         document.location.href=dataId;
     },
     onDocumentIdChange: function(t, newVal, oldVal, opts) {
