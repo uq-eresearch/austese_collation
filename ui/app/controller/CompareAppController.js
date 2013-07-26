@@ -71,21 +71,33 @@ Ext.define('TableApparatusApp.controller.CompareAppController', {
         }
     },
     viewRecord: function(button, event){
+        var docstore = Ext.getStore('DocumentListStore');
+        var docombo = Ext.ComponentQuery.query('#documentSelector')[0];
+        var docpath = docombo.getValue();
+        var docrecord = docstore.getById(docpath);
+        var resname;
         if (button.itemId == "viewRecordBtn1"){
             // left hand side
             var version1 = Ext.ComponentQuery.query('#versionSelector1')[0].getValue();
-            var resid = version1.split('/');
-            resid=resid[resid.length - 1];
-            var dataId = this.baseurl + "/repository/resources/" + resid + "/content";
-            document.location.href=dataId;
+            resname = version1.split('/');
         } else {
-            // right hand side
             var version2 = Ext.ComponentQuery.query('#versionSelector2')[0].getValue();
-            var resid = version2.split('/');
-            resid = resid[resid.length - 1];
-            var dataId = this.baseurl + "/repository/resources/" + resid + "/content";
-            document.location.href=dataId;
+            var resname = version2.split('/');
+
         }
+        resname=resname[resname.length - 1];
+
+        var resuuid = resname;
+        var resources = docrecord.get("resources");
+        for (var i = 0; i < resources.length; i++){
+           var res = resources[i];
+           if (res.name && res.name == resname){
+             resuuid = res.id;
+           } 
+        }
+           
+        var dataId = this.baseurl + "/repository/resources/" + resuuid;
+        document.location.href=dataId;
     },
     attachSyncActions: function(versionView,otherVersionView, counterLabel, otherCounterLabel,cls){
        var variants = versionView.body.query("span[class='added'], span[class='deleted']");
