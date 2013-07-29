@@ -205,7 +205,7 @@ Ext.define('TableApparatusApp.controller.CompareAppController', {
                         var bodyEl = response.target.dom;
                         jQuery(bodyEl).removeAnnotator().data('id', dataId);
                         bodyEl.annotationsEnabled = false;
-                        console.log("enable anno on compare body", bodyEl)
+                        //console.log("enable anno on compare body", bodyEl)
                         enableAnnotationsOnElement(bodyEl);
                     }
                 }

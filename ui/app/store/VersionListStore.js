@@ -31,6 +31,11 @@ Ext.define('TableApparatusApp.store.VersionListStore', {
             model: 'TableApparatusApp.model.VersionListModel',
             proxy: {
                 type: 'ajax',
+                pageParam: undefined,
+                startParam: undefined,
+                sortParam:undefined, 
+                limitParam: undefined,
+                noCache: false,
                 url: '', // managed by controller based on selected document id
                 reader: {
                     type: 'json',

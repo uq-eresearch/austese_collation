@@ -146,9 +146,19 @@ Ext.define('TableApparatusApp.controller.TableApparatusAppController', {
                     // First for AJAX response success, then after the content is loaded.
                     // We're only interested in after the content is loaded
                     if (!response.responseText) {
-                        var resid = versionName.split('/');
-                        resid = resid[resid.length - 1];
-                        var dataId = baseurl + "/repository/resources/" + resid + "/content";
+                        var resname = versionName.split('/');
+                        resname=resname[resname.length -1];
+                        var docstore = Ext.getStore('DocumentListStore');
+                        var docrecord = docstore.getById(documentId);
+                        var resuuid = resname;
+                        var resources = docrecord.get("resources");
+                        for (var i = 0; i < resources.length; i++){
+                           var res = resources[i];
+                           if (res.name && res.name == resname){
+                             resuuid = res.id;
+                           } 
+                        }
+                        var dataId = baseurl + "/repository/resources/" + resuuid + "/content";
                         var bodyEl = this.target.dom;
                         jQuery(bodyEl).removeAnnotator().data('id', dataId);
                         bodyEl.annotationsEnabled = false;
