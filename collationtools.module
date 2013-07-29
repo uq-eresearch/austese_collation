@@ -142,6 +142,8 @@ function collationtools_sendtomvd($ids=null){
     if ($docpath == null){
         $docpath = uniqid();
     }
+    // remove spaces from doc path
+    $docpath = str_replace(' ','_',$docpath);
     $origdocpath = $docpath;
     if ($ids==null){
         return t('Identifiers of resources to add to MVD not specified');
