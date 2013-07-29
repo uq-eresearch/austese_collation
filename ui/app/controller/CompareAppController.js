@@ -189,9 +189,19 @@ Ext.define('TableApparatusApp.controller.CompareAppController', {
                   controller.attachSyncActions(versions[0],versions[1], counterLabels[0], counterLabels[1],"deleted");
 
                     if (!response.responseText) {
-                        var resid = version1.split('/');
-                        resid=resid[resid.length -1];
-                        var dataId = baseurl + "/repository/resources/" + resid + "/content";
+                        var resname = version1.split('/');
+                        resname=resname[resname.length -1];
+                        var docstore = Ext.getStore('DocumentListStore');
+                        var docrecord = docstore.getById(documentId);
+                        var resuuid = resname;
+                        var resources = docrecord.get("resources");
+                        for (var i = 0; i < resources.length; i++){
+                           var res = resources[i];
+                           if (res.name && res.name == resname){
+                             resuuid = res.id;
+                           } 
+                        }
+                        var dataId = baseurl + "/repository/resources/" + resuuid + "/content";
                         var bodyEl = response.target.dom;
                         jQuery(bodyEl).removeAnnotator().data('id', dataId);
                         bodyEl.annotationsEnabled = false;
@@ -214,8 +224,20 @@ Ext.define('TableApparatusApp.controller.CompareAppController', {
                     controller.attachSyncActions(versions[1],versions[0], counterLabels[1], counterLabels[0],"added");
 
                     if (!response.responseText) {
-                        var resid = version2.split('/')[1];
-                        var dataId = baseurl + "/repository/resources/" + resid + "/content";
+                        var resname = version2.split('/');
+                        resname=resname[resname.length -1];
+                        var docstore = Ext.getStore('DocumentListStore');
+                        var docrecord = docstore.getById(documentId);
+                        var resuuid = resname;
+                        var resources = docrecord.get("resources");
+                        for (var i = 0; i < resources.length; i++){
+                           var res = resources[i];
+                           if (res.name && res.name == resname){
+                             resuuid = res.id;
+                           } 
+                        }
+                        
+                        var dataId = baseurl + "/repository/resources/" + resuuid + "/content";
                         var bodyEl = response.target.dom;
                         jQuery(bodyEl).removeAnnotator().data('id', dataId);
                         bodyEl.annotationsEnabled = false;
