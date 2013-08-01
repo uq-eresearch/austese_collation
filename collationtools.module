@@ -111,6 +111,7 @@ function collationtools_compare($left=null, $right=null) {
   $breadcrumb[] = t(drupal_get_title()); 
   drupal_set_breadcrumb($breadcrumb);
   $modulePath = drupal_get_path('module', 'collationtools');
+  drupal_add_css(drupal_get_path('module','repository') . '/ui/css/tei.css');
   drupal_add_css($modulePath . '/ui/app.css');
   drupal_add_js('/sites/all/libraries/ext-4.1.1a/ext-all.js');
   drupal_add_js($modulePath . '/ui/compareapp.js');
