@@ -191,6 +191,7 @@ function collationtools_sendtomvd($ids=null){
             // $contents = file_get_contents($resurl);
             $ch = curl_init();
             curl_setopt($ch, CURLOPT_URL, $resurl);
+            curl_setopt($ch, CURLOPT_ENCODING, 'UTF-8');
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); // return the transfer as a string
             $contents = curl_exec($ch);
             $contenttype = curl_getinfo($ch, CURLINFO_CONTENT_TYPE);
