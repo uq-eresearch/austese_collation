@@ -85,13 +85,19 @@ Ext.define('TableApparatusApp.controller.CompareAppController', {
             var resname = version2.split('/');
 
         }
-        resname=resname[resname.length - 1];
-
+        // the name of the version will be in either one of these positions e.g. could be path/Base/vname or path/vname/add0 etc
+        if (resname.length > 1) {
+            var resname1 = resname[resname.length - 1];
+        }
+        if (resname.length > 2){
+            var resname2 = resname[resname.length - 2];
+        }
+        
         var resuuid = resname;
         var resources = docrecord.get("resources");
         for (var i = 0; i < resources.length; i++){
            var res = resources[i];
-           if (res.name && res.name == resname){
+           if (res.name && (res.name == resname1 || res.name == resname2)){
              resuuid = res.id;
            } 
         }
