@@ -240,7 +240,7 @@ function collationtools_sendtomvd($ids=null){
             if ($hriterror == 0){
                 // store MVD details in db for now
                 // parse existing mvd results to check if one exists with same name, get id and delete
-                $mvdsearchurl = 'http://' . $_SERVER['HTTP_HOST'] . "/" . drupal_get_path('module', 'repository') . "/api/mvds/?searchField=name&q=" . $docpath . "$";
+                $mvdsearchurl = 'http://' . $_SERVER['HTTP_HOST'] . "/" . drupal_get_path('module', 'repository') . "/api/mvds/?searchField=name&query=" . $docpath . "$";
                 $mvdsearch = file_get_contents($mvdsearchurl);
                 $mvdsearchjson = json_decode($mvdsearch, TRUE);
                 $existingmvdcount = $mvdsearchjson['count'];
