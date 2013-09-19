@@ -248,13 +248,18 @@ function collationtools_sendtomvd($ids=null){
                     $existingmvd = $mvdsearchjson['results'][0]['id'];
                     $ch3 = curl_init();
                     curl_setopt($ch3, CURLOPT_CUSTOMREQUEST, 'DELETE');
+                    curl_setopt($ch3, CURLOPT_RETURNTRANSFER, TRUE);
                     curl_setopt($ch3, CURLOPT_URL, trim('http://' . $_SERVER['HTTP_HOST'] . "/" . drupal_get_path('module', 'repository') . "/api/mvds/" . $existingmvd));
                     $dbresponse = curl_exec ( $ch3 );
                     $dberr = curl_errno ( $ch3 );
                     $dberror = curl_error($ch3);
+                    $info3 = curl_getinfo($ch3);
                     curl_close($ch3);
-                    if ($dberr){
+                    if ($dberr) {
                         return t('Error: '. $dberr . " " . $dberror .$dbresponse);
+                    }
+                    if ($info3['http_code'] !== 204) { // success with No Content
+                        return t('Error deleting old mvd record: ' . $dbresponse);
                     }
                 }
                 // post new MVD details to db
