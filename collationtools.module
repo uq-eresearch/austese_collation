@@ -94,6 +94,7 @@ function collationtools_menu() {
 function collationtools_toc(){
   $breadcrumb = array();
   $breadcrumb[] = l('Home', '<front>');
+  _add_project_or_repository($breadcrumb);
   $breadcrumb[] = t(drupal_get_title()); 
   drupal_set_breadcrumb($breadcrumb);
   $list[] = l("Compare","collationtools/compare");
@@ -105,11 +106,18 @@ function collationtools_toc(){
   return $render_array;
 }
 function collationtools_compare($left=null, $right=null) {
+    
   $breadcrumb = array();
   $breadcrumb[] = l('Home', '<front>');
+  _add_project_or_repository($breadcrumb);
   $breadcrumb[] = l('Collation Tools', 'collationtools');
   $breadcrumb[] = t(drupal_get_title()); 
   drupal_set_breadcrumb($breadcrumb);
+//  $breadcrumb = array();
+//  $breadcrumb[] = l('Home', '<front>');
+//  $breadcrumb[] = l('Collation Tools', 'collationtools');
+//  $breadcrumb[] = t(drupal_get_title()); 
+//  drupal_set_breadcrumb($breadcrumb);
   $modulePath = drupal_get_path('module', 'collationtools');
   drupal_add_css(drupal_get_path('module','repository') . '/ui/css/tei.css');
   drupal_add_css($modulePath . '/ui/app.css');
@@ -302,6 +310,11 @@ function collationtools_sendtomvd($ids=null){
             // else message is failure message
             $message = "<p>There was an error creating the MVD. Refer to the log above for the cause. If the log does not indicate a reason, the operation may have failed as a result of versions being too large or too much variation between versions. Try splitting larger transcriptions into smaller sections.</p>";
         }
+        $breadcrumb = array();
+        $breadcrumb[] = l('Home', '<front>');
+        _add_project_or_repository($breadcrumb);
+        $breadcrumb[] = t(drupal_get_title()); 
+        drupal_set_breadcrumb($breadcrumb);
         return t('<p>'.$response . '</p>' . $message);
     }
     
