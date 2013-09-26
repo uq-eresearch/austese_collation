@@ -151,12 +151,14 @@ Ext.define('TableApparatusApp.controller.TableApparatusAppController', {
                         var docstore = Ext.getStore('DocumentListStore');
                         var docrecord = docstore.getById(documentId);
                         var resuuid = resname;
-                        var resources = docrecord.get("resources");
-                        for (var i = 0; i < resources.length; i++){
-                           var res = resources[i];
-                           if (res.name && res.name == resname){
-                             resuuid = res.id;
-                           } 
+                        if (docrecord) {
+                            var resources = docrecord.get("resources");
+                            for (var i = 0; i < resources.length; i++){
+                               var res = resources[i];
+                               if (res.name && res.name == resname){
+                                 resuuid = res.id;
+                               } 
+                            }
                         }
                         var dataId = baseurl + "/repository/resources/" + resuuid + "/content";
                         var bodyEl = this.target.dom;
