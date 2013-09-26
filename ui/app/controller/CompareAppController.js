@@ -17,6 +17,7 @@ Ext.define('TableApparatusApp.controller.CompareAppController', {
         // update the list of versions when the document id changes (this will trigger version views to update)
         var versionListStore = Ext.getStore("VersionListStore");
         versionListStore.getProxy().url = '/json/list/' + newVal;
+        this.versionListInit = false;
         versionListStore.load();
     },
     initSelectDocument: function(){
@@ -43,8 +44,11 @@ Ext.define('TableApparatusApp.controller.CompareAppController', {
         var versionSelector1 = Ext.ComponentQuery.query('#versionSelector1')[0];
         var versionSelector2 = Ext.ComponentQuery.query('#versionSelector2')[0];
         if (records && records.length > 0){
-            versionSelector1.select(records[0]);
-            versionSelector2.select(records[records.length-1]);
+            if (!this.versionListInit) {
+                versionSelector1.select(records[0]);
+                versionSelector2.select(records[records.length-1]);
+                this.versionListInit = true;
+            }
             versionSelector2.fireEvent('select',versionSelector1,records);
         }
     },
@@ -325,8 +329,8 @@ Ext.define('TableApparatusApp.controller.CompareAppController', {
             }
             
         });
-        Ext.getStore('DocumentListStore').on('load',this.initSelectDocument);
-        Ext.getStore('VersionListStore').on('load',this.onVersionListLoad);
+        Ext.getStore('DocumentListStore').on('load',this.initSelectDocument, this);
+        Ext.getStore('VersionListStore').on('load',this.onVersionListLoad, this);
     }
 
 });
