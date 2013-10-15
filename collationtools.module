@@ -151,6 +151,10 @@ function collationtools_sendtomvd($ids=null){
     if ($docpath == null){
         $docpath = uniqid();
     }
+    $filter = "";
+    if (isset($_GET['filter'])) {
+        $filter = $_GET['filter'];
+    }
     // remove spaces from doc path
     $docpath = str_replace(' ','_',$docpath);
     $origdocpath = $docpath;
