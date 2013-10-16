@@ -151,7 +151,7 @@ function collationtools_sendtomvd($ids=null){
     if ($docpath == null){
         $docpath = uniqid();
     }
-    $filter = "";
+    $filter = "Empty";
     if (isset($_GET['filter'])) {
         $filter = $_GET['filter'];
     }
@@ -218,6 +218,10 @@ function collationtools_sendtomvd($ids=null){
     $data .= "Content-Disposition: form-data; name=\"DOC_ID\"\r\n\r\n". $docpath. "\r\n";
     $data .= "--". $boundary."--\n";
     
+    $data .= "--".$boundary."\r\n";
+    $data .= "Content-Disposition: form-data; name=\"FILTER\"\r\n\r\n". $filter. "\r\n";
+    $data .= "--". $boundary."--\n";
+    
     $ch = curl_init();
     // post to HRIT server import
     curl_setopt($ch, CURLOPT_URL, trim($hritimport));
@@ -277,7 +281,7 @@ function collationtools_sendtomvd($ids=null){
                 // post new MVD details to db
                 $mvddburl = 'http://' . $_SERVER['HTTP_HOST'] . "/" . drupal_get_path('module', 'repository') . "/api/mvds/";
 
-                $newmvd = array('name' => $origdocpath, 'resources' => $idarr);
+                $newmvd = array('name' => $origdocpath, 'resources' => $idarr, 'filter' => $filter);
                 if (isset($_GET['project'])) {
                     $newmvd['project'] = $_GET['project'];
                 }
