@@ -9,7 +9,7 @@ if (property_exists($user,'data')){
 }
 ?>
 <div id="metadata"
- <?php if (user_access('edit metadata')): ?>
+ <?php if (austese_access('edit metadata', $project)): ?>
   data-editable="true"
  <?php endif; ?>
  <?php if ($fullscreen):?>
