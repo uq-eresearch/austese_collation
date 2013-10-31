@@ -92,11 +92,14 @@ function collationtools_menu() {
   return $items;
 }
 function collationtools_toc(){
+  // Create breadcrumbs trail
   $breadcrumb = array();
   $breadcrumb[] = l('Home', '<front>');
   _add_project_or_repository($breadcrumb);
   $breadcrumb[] = t(drupal_get_title()); 
   drupal_set_breadcrumb($breadcrumb);
+
+  // Prepare render array
   $list[] = l("Compare","collationtools/compare");
   $list[] = l("Table Apparatus","collationtools/apparatus");
   $render_array['collationtools_list'] = array(
@@ -106,18 +109,15 @@ function collationtools_toc(){
   return $render_array;
 }
 function collationtools_compare($left=null, $right=null) {
-    
+  // Create breadcrumbs trail
   $breadcrumb = array();
   $breadcrumb[] = l('Home', '<front>');
   _add_project_or_repository($breadcrumb);
   $breadcrumb[] = l('Collation Tools', 'collationtools');
   $breadcrumb[] = t(drupal_get_title()); 
   drupal_set_breadcrumb($breadcrumb);
-//  $breadcrumb = array();
-//  $breadcrumb[] = l('Home', '<front>');
-//  $breadcrumb[] = l('Collation Tools', 'collationtools');
-//  $breadcrumb[] = t(drupal_get_title()); 
-//  drupal_set_breadcrumb($breadcrumb);
+
+  // Add JS/CSS to render array
   $modulePath = drupal_get_path('module', 'collationtools');
   drupal_add_css(drupal_get_path('module','repository') . '/ui/css/tei.css');
   drupal_add_css($modulePath . '/ui/app.css');
