@@ -18,6 +18,9 @@ if (property_exists($user,'data')){
  data-moduleprefix="<?php print $modulePrefix; ?>"
  data-modulepath="<?php print drupal_get_path('module', 'collation'); ?>"
  data-baseurl="http://<?php print $_SERVER['SERVER_NAME']; ?>"
+ <?php if ($project):?>
+  data-project="<?php print $project; ?>"
+ <?php endif; ?>
 >
 </div>
 <div id="uiplaceholder"></div>
