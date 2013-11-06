@@ -333,7 +333,7 @@ Ext.define('TableApparatusApp.controller.TableApparatusAppController', {
         var uiPanel = Ext.ComponentQuery.query("apparatusviewer")[0];
         var placeholder = Ext.get('uiplaceholder');
         var newHeight = h - (placeholder.getY());
-        var newWidth = w - placeholder.getX()*2;
+        var newWidth = w - placeholder.getX() - 30;
         placeholder.setHeight(newHeight);
         uiPanel.setHeight(newHeight);
         placeholder.setWidth(newWidth);

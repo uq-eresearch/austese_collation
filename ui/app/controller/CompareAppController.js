@@ -213,7 +213,7 @@ Ext.define('TableApparatusApp.controller.CompareAppController', {
                         }
                         var dataId = baseurl + "/repository/resources/" + resuuid + "/content";
                         var bodyEl = response.target.dom;
-                        jQuery(bodyEl).removeAnnotator().data('id', dataId);
+                        jQuery(bodyEl).removeAnnotator().data('id', dataId).data('annolabel','LHS');
                         bodyEl.annotationsEnabled = false;
                         //console.log("enable anno on compare body", bodyEl)
                         enableAnnotationsOnElement(bodyEl);
@@ -249,7 +249,7 @@ Ext.define('TableApparatusApp.controller.CompareAppController', {
                         
                         var dataId = baseurl + "/repository/resources/" + resuuid + "/content";
                         var bodyEl = response.target.dom;
-                        jQuery(bodyEl).removeAnnotator().data('id', dataId);
+                        jQuery(bodyEl).removeAnnotator().data('id', dataId).data('annolabel','RHS');
                         bodyEl.annotationsEnabled = false;
 
                         enableAnnotationsOnElement(bodyEl);
@@ -280,7 +280,7 @@ Ext.define('TableApparatusApp.controller.CompareAppController', {
         var uiPanel = Ext.ComponentQuery.query("compareviewer")[0];
         var placeholder = Ext.get('uiplaceholder');
         var newHeight = h - (placeholder.getY());
-        var newWidth = w - placeholder.getX()*2;
+        var newWidth = w - placeholder.getX() - 30;
         placeholder.setHeight(newHeight);
         uiPanel.setHeight(newHeight);
         placeholder.setWidth(newWidth);

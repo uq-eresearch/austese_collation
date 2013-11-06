@@ -9,7 +9,7 @@ if (property_exists($user,'data')){
 }
 ?>
 <div id="metadata"
- <?php if (austese_access('edit metadata', $project)): ?>
+ <?php if (ISSET($project) && austese_access('edit metadata', $project)): ?>
   data-editable="true"
  <?php endif; ?>
  <?php if ($fullscreen):?>
@@ -18,7 +18,7 @@ if (property_exists($user,'data')){
  data-moduleprefix="<?php print $modulePrefix; ?>"
  data-modulepath="<?php print drupal_get_path('module', 'collation'); ?>"
  data-baseurl="http://<?php print $_SERVER['SERVER_NAME']; ?>"
- <?php if ($project):?>
+ <?php if (ISSET($project)):?>
   data-project="<?php print $project; ?>"
  <?php endif; ?>
 >
