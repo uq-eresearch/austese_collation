@@ -279,7 +279,7 @@ Ext.define('TableApparatusApp.controller.CompareAppController', {
         // force resize and repositioning of app when window resizes
         var uiPanel = Ext.ComponentQuery.query("compareviewer")[0];
         var placeholder = Ext.get('uiplaceholder');
-        var newHeight = h - (placeholder.getY());
+        var newHeight = h - (placeholder.getY()) - 70;
         var newWidth = w - placeholder.getX() - 30;
         placeholder.setHeight(newHeight);
         uiPanel.setHeight(newHeight);

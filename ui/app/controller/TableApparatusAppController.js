@@ -332,7 +332,7 @@ Ext.define('TableApparatusApp.controller.TableApparatusAppController', {
         // force resize and repositioning of app when window resizes
         var uiPanel = Ext.ComponentQuery.query("apparatusviewer")[0];
         var placeholder = Ext.get('uiplaceholder');
-        var newHeight = h - (placeholder.getY());
+        var newHeight = h - (placeholder.getY()) - 35;
         var newWidth = w - placeholder.getX() - 30;
         placeholder.setHeight(newHeight);
         uiPanel.setHeight(newHeight);
