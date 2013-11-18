@@ -216,7 +216,6 @@ function collationtools_sendtomvd($ids=null){
     }
     $data .= "--".$boundary."\r\n";
     $data .= "Content-Disposition: form-data; name=\"DOC_ID\"\r\n\r\n". $docpath. "\r\n";
-    $data .= "--". $boundary."--\n";
     
     $data .= "--".$boundary."\r\n";
     $data .= "Content-Disposition: form-data; name=\"FILTER\"\r\n\r\n". $filter. "\r\n";
