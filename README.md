@@ -5,7 +5,7 @@ Drupal module providing collation tools and views for AustESE workbench
 
 How to use this module:
 * Ensure that you have installed the [austese_repository](https://github.com/uq-eresearch/austese_repository/) module
-* Ensure that the [HRIT Server](https://github.com/HRIT-Infrastructure/hritserver) is running and proxying is set up to redirect requests from port 80 to the service (running by default on port 8080)
+* Ensure that the [Calliope](https://github.com/HRIT-Infrastructure/calliope) is running and proxying is set up to redirect requests from port 80 to the service (running by default on port 8080)
 * Install this module to sites/all/modules/austese_collation
 * Enable module via drupal admin console
 
