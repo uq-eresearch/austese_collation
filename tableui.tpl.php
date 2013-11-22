@@ -7,6 +7,9 @@ if (property_exists($user,'data')){
 } else {
  $fullscreen = false;
 }
+if (!ISSET($project) && isset($_GET['project'])) {
+ $project = $_GET['project'];
+}
 ?>
 <div id="metadata"
  <?php if (ISSET($project) && austese_access('edit metadata', $project)): ?>
@@ -15,6 +18,7 @@ if (property_exists($user,'data')){
  <?php if ($fullscreen):?>
  data-fullscreen="<?php print $fullscreen; ?>"
  <?php endif; ?>
+ data-project="<?php print $project; ?>"
  data-moduleprefix="<?php print $modulePrefix; ?>"
  data-modulepath="<?php print drupal_get_path('module', 'collation'); ?>"
  data-baseurl="http://<?php print $_SERVER['SERVER_NAME']; ?>"
