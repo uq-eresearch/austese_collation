@@ -199,8 +199,9 @@ Ext.define('TableApparatusApp.controller.CompareAppController', {
                   controller.attachSyncActions(versions[0],versions[1], counterLabels[0], counterLabels[1],"deleted");
 
                     if (!response.responseText) {
+                        // Find the Resource UUID
                         var resname = version1.split('/');
-                        resname=resname[resname.length -1];
+                        resname=resname[resname.length - 2];
                         var docstore = Ext.getStore('DocumentListStore');
                         var docrecord = docstore.getById(documentId);
                         var resuuid = resname;
@@ -211,6 +212,7 @@ Ext.define('TableApparatusApp.controller.CompareAppController', {
                              resuuid = res.id;
                            } 
                         }
+
                         var dataId = baseurl + "/repository/resources/" + resuuid + "/content";
                         if (response && response.target && response.target){
                             var bodyEl = response.target.dom;
