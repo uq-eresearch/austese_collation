@@ -9,6 +9,8 @@ if (property_exists($user,'data')){
 }
 if (!ISSET($project) && isset($_GET['project'])) {
  $project = $_GET['project'];
+} else {
+ $project = "";
 }
 ?>
 <div id="metadata"
