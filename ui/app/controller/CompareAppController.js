@@ -174,6 +174,23 @@ Ext.define('TableApparatusApp.controller.CompareAppController', {
            });
        });
     },
+    // Find the Resource UUID
+    findResourceUUID: function(versionName, documentId) {
+        // Find the Resource UUID
+        var resname = versionName.split('/');
+        resname = resname[resname.length - 2];
+        var docstore = Ext.getStore('DocumentListStore');
+        var docrecord = docstore.getById(documentId);
+        var resuuid = resname;
+        var resources = docrecord.get("resources");
+        for (var i = 0; i < resources.length; i++){
+           var res = resources[i];
+           if (res.name && res.name == resname){
+             resuuid = res.id;
+           } 
+        }
+        return resuuid;
+    },
     onVersionSelectionChange: function(combo, records, options) {
         var rec = records[0];
         var controller = this;
@@ -199,19 +216,7 @@ Ext.define('TableApparatusApp.controller.CompareAppController', {
                   controller.attachSyncActions(versions[0],versions[1], counterLabels[0], counterLabels[1],"deleted");
 
                     if (!response.responseText) {
-                        // Find the Resource UUID
-                        var resname = version1.split('/');
-                        resname=resname[resname.length - 2];
-                        var docstore = Ext.getStore('DocumentListStore');
-                        var docrecord = docstore.getById(documentId);
-                        var resuuid = resname;
-                        var resources = docrecord.get("resources");
-                        for (var i = 0; i < resources.length; i++){
-                           var res = resources[i];
-                           if (res.name && res.name == resname){
-                             resuuid = res.id;
-                           } 
-                        }
+                        var resuuid = controller.findResourceUUID(version1, documentId);
 
                         var dataId = baseurl + "/repository/resources/" + resuuid + "/content";
                         if (response && response.target && response.target){
@@ -238,18 +243,7 @@ Ext.define('TableApparatusApp.controller.CompareAppController', {
                     controller.attachSyncActions(versions[1],versions[0], counterLabels[1], counterLabels[0],"added");
 
                     if (!response.responseText) {
-                        var resname = version2.split('/');
-                        resname=resname[resname.length -1];
-                        var docstore = Ext.getStore('DocumentListStore');
-                        var docrecord = docstore.getById(documentId);
-                        var resuuid = resname;
-                        var resources = docrecord.get("resources");
-                        for (var i = 0; i < resources.length; i++){
-                           var res = resources[i];
-                           if (res.name && res.name == resname){
-                             resuuid = res.id;
-                           } 
-                        }
+                        var resuuid = controller.findResourceUUID(version2, documentId);
                         
                         var dataId = baseurl + "/repository/resources/" + resuuid + "/content";
                         var bodyEl = response.target.dom;
